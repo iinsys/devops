@@ -1,0 +1,8 @@
+---
+- name: Create a file on App Server 3
+  hosts: stapp03
+  tasks:
+    - name: Create an empty file
+      file:
+        path: /tmp/file.txt
+        state: touch

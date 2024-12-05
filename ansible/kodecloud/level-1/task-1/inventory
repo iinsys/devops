@@ -1,0 +1,4 @@
+[app_servers]
+app-server-2 ansible_host=<App_Server_2_IP> ansible_user=steve ansible_password=<passwordforappserver3> ansible_ssh_common_args='-o Strict HostKeyChecking=no'
+app-server-3 ansible_host=<App_Server_3_IP> ansible_user=banner ansible_password=<passwordforappserver3> ansible_ssh_common_args='-o Strict HostKeyChecking=no'
+
