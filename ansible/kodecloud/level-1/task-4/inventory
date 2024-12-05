@@ -1,0 +1,4 @@
+[app_servers]
+stapp01 ansible_host=<App_Server_1_IP> ansible_user=tony ansible_password=<passwordforappserver1>
+stapp02 ansible_host=<App_Server_1_IP>  ansible_user=steve ansible_password=<passwordforappserver2>
+stapp03 ansible_host=<App_Server_1_IP>  ansible_user=banner ansible_password=<passwordforappserver3>

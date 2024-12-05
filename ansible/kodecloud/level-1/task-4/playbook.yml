@@ -1,0 +1,21 @@
+---
+- name: Copy index.html to all application servers
+  hosts: app_servers
+  gather_facts: false
+  become: true  # Run tasks with elevated privileges
+  tasks:
+    - name: Ensure destination directory exists
+      file:
+        path: /opt/dba
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy index.html to /opt/dba
+      copy:
+        src: /usr/src/dba/index.html
+        dest: /opt/dba/
+        owner: root
+        group: root
+        mode: '0644'
