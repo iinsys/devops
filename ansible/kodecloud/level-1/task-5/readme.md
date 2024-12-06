@@ -17,8 +17,8 @@ Note: Validation will execute the playbook using the command ansible-playbook -i
 
 
 ##Solution:
-# Step 1: Create the Inventory File
-# Create the inventory file at ~/playbook/inventory with the following content:
+#### Step 1: Create the Inventory File
+#### Create the inventory file at `~/playbook/inventory` with the following content:
 ```inventory
 [app_servers]
 stapp01 ansible_host=172.16.238.10 ansible_user=tony ansible_password=Ir0nM@n
@@ -27,7 +27,7 @@ stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_password=BigGr33n
 ```
 
 ### Step 2: Create the Playbook
-### Create the playbook at ~/playbook/playbook.yml with the following content:
+### Create the playbook at `~/playbook/playbook.yml` with the following content:
 
 ```yml
 ---
@@ -46,23 +46,23 @@ stapp03 ansible_host=172.16.238.12 ansible_user=banner ansible_password=BigGr33n
         group: "{{ ansible_user }}"
 ```
 
-# Explanation:
+### Explanation:
 
-# Inventory file:
-# - The inventory defines the app servers and their respective SSH connection details.
+#### Inventory file:
+ - The inventory defines the app servers and their respective SSH connection details.
 
-# Playbook tasks:
-# - hosts: app_servers: Targets all app servers in the inventory.
-# - become: true: Ensures elevated privileges to create the file under /usr/src/.
-# - file module:
-#   - Creates the file /usr/src/app.txt if it doesn’t exist (state: touch).
-#   - Sets permissions (mode: '0755').
-#   - Dynamically assigns ownership (owner and group) using the ansible_user variable 
-#     (matches the user defined in the inventory).
+#### Playbook tasks:
+ - hosts: app_servers: Targets all app servers in the inventory.
+ - become: true: Ensures elevated privileges to create the file under /usr/src/.
+ - file module:
+   - Creates the file `/usr/src/app.txt` if it doesn’t exist (state: touch).
+   - Sets permissions `(mode: '0755')`.
+   - Dynamically assigns ownership (owner and group) using the ansible_user variable 
+     (matches the user defined in the inventory).
 
 
-# Step 3: Run the Playbook
-# Execute the playbook to verify the solution:
+#### Step 3: Run the Playbook
+ Execute the playbook to verify the solution:
 ```bash
 ansible-playbook -i ~/playbook/inventory ~/playbook/playbook.yml
 ```
