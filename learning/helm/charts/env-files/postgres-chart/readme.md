@@ -1,0 +1,3 @@
+```bash
+./generate-values.sh
+```
