@@ -1,3 +1,7 @@
+# values.yaml
 postgres:
   username: ""
   password: ""
+  image: postgres:15.0
+  port: 5432
+  storageSize: 5Gi

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: postgres-chart
+description: A Helm chart for PostgreSQL deployment
+version: 0.1.0
