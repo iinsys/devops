@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:latest
+          image: "{{ .Values.postgres.image }}:{{ .Values.postgres.tag }}" 
           envFrom:
             - secretRef:
                 name: postgres-secret

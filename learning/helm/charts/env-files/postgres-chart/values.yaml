@@ -2,6 +2,7 @@
 postgres:
   username: ""
   password: ""
-  image: postgres:15.0
+  image: postgres
+  tag: "latest"
   port: 5432
   storageSize: 5Gi
