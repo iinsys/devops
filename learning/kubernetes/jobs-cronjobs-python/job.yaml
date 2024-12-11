@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  creationTimestamp: null
+  name: simplejob
+spec:
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+      name: simplejob
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+          - image: simplejob:latest ## can build image and push to registry
+            imagePullPolicy: IfNotPresent
+            name: simplejob
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: '*/5 * * * *'
+status: {}

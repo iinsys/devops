@@ -9,13 +9,13 @@ spec:
     spec:
       containers:
       - name: compress
-        image: alpine
-        command: ["sh", "-c", "tar -czf /data/logs.tar.gz /var/log/app"]
+        image: alpine:latest
+        command: ["sh", "-c", "mkdir -p /data && tar -czf /data/logs.tar.gz /tmp"]
         volumeMounts:
         - name: log-storage
-          mountPath: /var/log/app
+          mountPath: /tmp
       restartPolicy: Never
       volumes:
       - name: log-storage
-        hostPath:
-          path: /var/log/app
+        emptyDir: {}
+
