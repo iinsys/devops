@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: compress-logs
+spec:
+  template:
+    metadata:
+      name: compress-logs
+    spec:
+      containers:
+      - name: compress
+        image: alpine
+        command: ["sh", "-c", "tar -czf /data/logs.tar.gz /var/log/app"]
+        volumeMounts:
+        - name: log-storage
+          mountPath: /var/log/app
+      restartPolicy: Never
+      volumes:
+      - name: log-storage
+        hostPath:
+          path: /var/log/app

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-db-backup
+spec:
+  schedule: "0 2 * * *" # At 2:00 AM daily
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: db-backup
+        spec:
+          containers:
+          - name: backup
+            image: mysql:latest
+            command: ["sh", "-c", "mysqldump -u root -p${MYSQL_ROOT_PASSWORD} mydb > /backup/db-backup.sql"]
+            env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: root-password
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: backup-pvc
