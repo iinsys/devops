@@ -1,1 +1,25 @@
 /config/.env
+# Exclude Terraform files that shouldn't be shared
+*.tfstate
+*.tfstate.backup
+
+# Exclude local variables files (e.g., secrets, passwords, etc.)
+*.auto.tfvars
+*.terraform/
+*.terraform.lock.hcl
+*.tfvars
+
+# Ignore editor and system files
+*.swp
+*.bak
+*.tmp
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Ignore Terraform plan files
+*.tfplan
+
+terraform.tfvars
+*.pem
