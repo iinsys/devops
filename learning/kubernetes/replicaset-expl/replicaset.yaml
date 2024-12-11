@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nodejs-replicaset
+  labels:
+    app: nodejs-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: nodejs-container
+        image: node:latest
+        ports:
+        - containerPort: 3000
+        command: ["node"]
+        args: ["app.js"]
+        volumeMounts:
+        - name: app-source
+          mountPath: /usr/src/app
+      volumes:
+      - name: app-source
+        configMap:
+          name: nodejs-config

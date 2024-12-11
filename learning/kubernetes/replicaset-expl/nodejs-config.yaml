@@ -1,0 +1,13 @@
+## configmap to store app.js contents
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nodejs-config
+data:
+  app.js: |
+    const http = require('http');
+    const server = http.createServer((req, res) => {
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end('Hello from Node.js ReplicaSet!');
+    });
+    server.listen(3000);
