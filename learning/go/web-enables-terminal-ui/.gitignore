@@ -1,0 +1,33 @@
+# Go binary
+/main
+
+# Go modules files
+/go.sum
+
+# Vendor directory (if using vendoring)
+/vendor/
+
+# Build output directories
+/bin/
+/obj/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Docker files
+.docker/
+
+# Go Test binary
+*.test
+
+# Log files
+*.log
+
+# Coverage output
+*.out
