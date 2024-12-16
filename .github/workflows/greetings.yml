@@ -1,0 +1,23 @@
+name: Greetings
+
+on: [pull_request_target, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: |
+          Welcome to the repository! 🚀
+          - If your issue concerns **API Module**, please check `api/CONTRIBUTING.md` for guidance.
+          - For issues about **Frontend**, ensure you add the `frontend` label to help us triage.
+        pr-message: |
+          Thank you for your first pull request! 🎉
+          - If it changes **Backend APIs**, ensure you include tests in `backend/tests`.
+          - For **Frontend changes**, attach screenshots showing the visual updates.
+
