@@ -1,3 +1,10 @@
+you should create a `/sensitive` directory with a `.env` file and it should contain 
+```bash
+POSTGRES_USER=<username>
+POSTGRES_PASSWORD=<password>
+```
+
+### Run commands to deploy and verify
 ```bash
 ./generate-values.sh
 
