@@ -13,11 +13,11 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: |
-          Welcome to the repository! 🚀
-          - If your issue concerns **API Module**, please check `api/CONTRIBUTING.md` for guidance.
-          - For issues about **Frontend**, ensure you add the `frontend` label to help us triage.
+          Welcome to the DevOps Tools repository! 🚀
+          - Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file before raising an issue.
+          - If you're working on **Jenkins**, **Kubernetes**, or other tools, ensure your issue includes necessary details to reproduce it.
         pr-message: |
           Thank you for your first pull request! 🎉
-          - If it changes **Backend APIs**, ensure you include tests in `backend/tests`.
-          - For **Frontend changes**, attach screenshots showing the visual updates.
-
+          - Before merging, please confirm that your changes adhere to the guidelines in [CONTRIBUTING.md](CONTRIBUTING.md).
+          - Let's keep the repository organized and robust for everyone!
+          - If you're working on **Jenkins**, **Kubernetes**, or other tools, ensure your pull request includes necessary details to reproduce it.

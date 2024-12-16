@@ -11,7 +11,10 @@
 /tmp/
 
 # Used by dotenv library to load environment variables.
-# .env
+.env*
+
+.vscode
+.idea
 
 # Ignore Byebug command history file.
 .byebug_history
