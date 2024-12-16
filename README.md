@@ -1,4 +1,6 @@
 # DevOps Tools and Solutions Repository
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops?ref=badge_shield)
+
 
 Welcome to the **DevOps Tools and Solutions** repository! 🎉
 
@@ -44,6 +46,9 @@ We are committed to fostering a welcoming and respectful environment. Please rea
 
 ## 📄 License
 This repository is licensed under the terms of the [LICENSE](./LICENSE). Feel free to use, modify, and distribute this code as per the license conditions.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops?ref=badge_large)
 
 ## 🔗 Additional Resources
 [KodeCloud Official Website](https://kodekloud.com/)
