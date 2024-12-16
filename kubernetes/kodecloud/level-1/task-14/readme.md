@@ -20,6 +20,12 @@ kubectl get configmap nginx-config -o yaml
 kubectl logs nginx-phpfpm -c nginx
 kubectl logs nginx-phpfpm -c php-fpm
 
+##use this solutin afte editing the pod nginx-phpfpm make sure all containers have the /var/www/html dir not something else
+kubectl replace --force -f /tmp/kubectl-edit-635629484.yaml
+kubectl cp index.php nginx-phpfpm:/index.php -c nginx-container
+kubectl exec -it nginx-phpfpm -c nginx-container -- /bin/bash
+cp index.php /var/www/html
+ls -ltr index.php /var/www/html
 
 ###Rectify configuration issues
 kubectl edit configmap nginx-config
