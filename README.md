@@ -45,7 +45,7 @@ We welcome contributions from everyone! 🎉 If you have solutions, enhancements
 We are committed to fostering a welcoming and respectful environment. Please read our [Code of Conduct](./CODE_OF_CONDUCT.md) to understand our expectations and help us maintain an inclusive community.
 
 ## 📄 License
-This repository is licensed under the terms of the [LICENSE](./LICENSE). Feel free to use, modify, and distribute this code as per the license conditions.
+This repository is licensed under the terms of the [ MIT license](./LICENSE). Feel free to use, modify, and distribute this code as per the license conditions.
 
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops?ref=badge_large)
