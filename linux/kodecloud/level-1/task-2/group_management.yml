@@ -1,0 +1,15 @@
+- name: Manage group and user on App servers
+  hosts: app_servers
+  become: true  # Enables privilege escalation
+  tasks:
+    - name: Ensure nautilus_admin_users group exists
+      ansible.builtin.group:
+        name: nautilus_admin_users
+        state: present
+
+    - name: Ensure jarod user exists and is in the nautilus_admin_users group
+      ansible.builtin.user:
+        name: jarod
+        groups: nautilus_admin_users
+        state: present
+        append: yes
