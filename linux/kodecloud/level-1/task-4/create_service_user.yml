@@ -1,0 +1,10 @@
+- name: Create a service user without a home directory
+  hosts: app_servers
+  become: true
+  tasks:
+    - name: Ensure the user 'kareem' is created without a home directory
+      user:
+        name: kareem
+        shell: /bin/bash
+        create_home: no
+        state: present

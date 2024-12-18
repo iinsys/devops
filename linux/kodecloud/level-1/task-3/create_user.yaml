@@ -1,0 +1,9 @@
+- name: Create a user with a non-interactive shell
+  hosts: app_servers
+  become: true
+  tasks:
+    - name: Ensure the user 'james' exists with a non-interactive shell
+      user:
+        name: james
+        shell: /sbin/nologin
+        state: present
