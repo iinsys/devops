@@ -1,0 +1,14 @@
+[package]
+name = "kubers-demo"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+kube = { version = "0.87.2", features = ["client","runtime", "derive", "rustls-tls"] }
+k8s-openapi = { version = "0.20.0", features = ["latest"] }
+tokio = { version = "1.0", features = ["full"] }  # Use the latest version
+[dev-dependencies]
+k8s-openapi = { version = "0.20.0", features = ["latest"] }
+async-std = "1.0"  # Use the latest version

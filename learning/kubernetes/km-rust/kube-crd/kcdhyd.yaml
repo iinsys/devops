@@ -1,0 +1,12 @@
+apiVersion: example.com/v1
+kind: KCDTrack2
+metadata:
+  name: integrating-rust
+spec:
+  organizer: "kcdhyd"
+  topic: "Building the Bridge: Integrating Rust with Kubernetes Controller Runtime"
+  attendees: []
+  conference: "KCD Hyderabad"
+  time: "15:55 - 16:20"
+  session_type: "Session"
+  speaker: "Sangam Biradar, CloudNativeFolks"
