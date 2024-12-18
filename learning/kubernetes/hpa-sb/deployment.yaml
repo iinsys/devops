@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-hpa-app
+  labels:
+    app: spring-boot-hpa-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-hpa-app
+  template:
+    metadata:
+      labels:
+        app: spring-boot-hpa-app
+    spec:
+      containers:
+      - name: spring-boot-hpa-app
+        image: bansikah/spring-boot-hpa:latest
+        ports:
+        - containerPort: 8082
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
