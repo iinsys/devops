@@ -1,3 +1,4 @@
+The spring boot application is develop to randomly increase cpu utilization so when ever it increases it will will scale up and vise versa.
 ```bash
 mvn clean package
 
@@ -40,3 +41,5 @@ kubectl port-forward service/spring-boot-hpa-service 8082:8082
 **Verification**
 - Confirm that new pods are created when CPU utilization exceeds 50%.
 - Test scaling down by stopping the load test.
+
+![Results](./hpa.png)
