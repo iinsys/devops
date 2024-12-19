@@ -43,3 +43,6 @@ kubectl port-forward service/spring-boot-hpa-service 8082:8082
 - Test scaling down by stopping the load test.
 
 ![Results](./hpa.png)
+
+Before increasing the cpu utilization you should have this
+![Results](./hpafirst.png)
