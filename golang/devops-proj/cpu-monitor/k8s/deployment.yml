@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cpu-monitor
+  template:
+    metadata:
+      labels:
+        app: cpu-monitor
+    spec:
+      containers:
+      - name: cpu-monitor
+        image: bansikah/cpu-monitor:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8080

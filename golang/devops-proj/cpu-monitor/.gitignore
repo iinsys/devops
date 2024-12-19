@@ -1,0 +1,31 @@
+# Binaries
+server
+*.exe
+*.out
+*.o
+
+# Dependency directories
+# Ignore the vendor directory only if you don't want to commit dependencies
+# Uncomment the next line if you don't want to track vendor in your repository
+# /vendor/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.old
+
+# Docker and CI files
+docker-compose.override.yml
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+/vendor
