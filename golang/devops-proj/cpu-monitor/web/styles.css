@@ -6,7 +6,7 @@ body {
 }
 
 header {
-    background-color: #4CAF50;
+    background-color: #000435;
     color: white;
     padding: 15px 10px;
     text-align: center;
@@ -29,7 +29,7 @@ th, td {
 }
 
 th {
-    background-color: #4CAF50;
+    background-color: #000435;
     color: white;
 }
 
@@ -38,7 +38,7 @@ tr:nth-child(even) {
 }
 
 footer {
-    background-color: #4CAF50;
+    background-color: #000435;
     color: white;
     text-align: center;
     padding: 10px 0;
