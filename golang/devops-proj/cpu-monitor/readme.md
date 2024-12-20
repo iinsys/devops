@@ -56,6 +56,8 @@ eval $(minikube docker-env)
 
 ## Deploy application using manifest files on cluster
 cd k8s 
+kubectl apply -f clusterrole.yaml
+kubectl apply -f clusterrolebinding.yaml
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 
