@@ -14,13 +14,13 @@ spec:
     spec:
       containers:
       - name: cpu-monitor
-        image: bansikah/cpu-monitor:latest
+        image: bansikah/cpu-monitor-pods:latest
         resources:
           limits:
+            memory: "256Mi"
+            cpu: "1000m"
+          requests:
             memory: "128Mi"
             cpu: "500m"
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
         ports:
         - containerPort: 8080

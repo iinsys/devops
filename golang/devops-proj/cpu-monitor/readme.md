@@ -42,8 +42,8 @@ go mod tidy
 go get k8s.io/client-go@v0.22.0
 go get k8s.io/api@v0.22.0
 go get k8s.io/metrics/pkg/client/clientset/versioned
-go mod vendor
 
+## This application is based on go 23 so you should install that version to avoid conflicts
 
 ## you can package and push your own docker image
 docker build -t bansikah/cpu-monitor:latest .
@@ -52,12 +52,15 @@ docker push bansikah/cpu-monitor:latest
 ## On your cluster
 kubectl get nodes
 
+eval $(minikube docker-env)
+
 ## Deploy application using manifest files on cluster
 cd k8s 
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 
 ## Access the service
+minikube ip
 minikube service cpu-monitor
 ```
 **Note**

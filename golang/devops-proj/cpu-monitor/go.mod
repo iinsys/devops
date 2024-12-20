@@ -1,6 +1,8 @@
 module cpu-monitor
 
-go 1.21
+go 1.23.0
+
+toolchain go1.23.4
 
 require (
 	k8s.io/apimachinery v0.32.0
