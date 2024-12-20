@@ -1,0 +1,24 @@
+---
+- name: Disable root SSH login on app servers
+  hosts: app_servers
+  become: true
+  tasks:
+    - name: Ensure PermitRootLogin is set to 'no' in sshd_config
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+        state: present
+      notify: Restart SSHD
+
+    - name: Backup sshd_config
+      copy:
+        src: /etc/ssh/sshd_config
+        dest: /etc/ssh/sshd_config.bak
+        remote_src: yes
+
+  handlers:
+    - name: Restart SSHD
+      service:
+        name: sshd
+        state: restarted
