@@ -7,7 +7,8 @@ RUN go mod tidy
 RUN go mod download
 
 COPY . ./
-RUN go build -o server .
+# Build a statically linked binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server .
 
 # Stage 2: Create a smaller image for running the application
 FROM alpine:latest
