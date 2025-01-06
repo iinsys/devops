@@ -64,6 +64,24 @@ kubectl apply -f service.yaml
 ## Access the service
 minikube ip
 minikube service cpu-monitor
+
+## Debugging
+kubectl auth can-i get pods --as=system:serviceaccount:default:default --namespace=default
+
+# Verify that the metrics server is installed and running:
+kubectl get pods -n kube-system | grep metrics-server
+## if its not install using 
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+## Ensure RBAC permissions are correct
+kubectl get clusterrole metrics-reader
+kubectl get clusterrolebinding metrics-reader-binding
+
+kubectl logs -n kube-system deployment/metrics-server
+
+## Check rbac permissions
+kubectl auth can-i get pods.metrics.k8s.io --as=system:serviceaccount:default:default --namespace=default
+
 ```
 **Note**
 - Ensure you have the Kubernetes metrics server installed in your cluster to fetch the metrics.

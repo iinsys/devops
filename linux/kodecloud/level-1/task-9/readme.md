@@ -16,4 +16,10 @@ sudo chmod a+rx /tmp/xfusioncorp.sh
 
 # verify the permissions have been granted
 ls -l /tmp/xfusioncorp.sh
+
+## execute the script
+/tmp/xfusioncorp.sh
+
+## logout of the server
+exit
 ```

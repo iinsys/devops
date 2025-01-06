@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: cpu-monitor
-        image: bansikah/cpu-monitor-pods:latest
+        image: bansikah/cpu-monitor-pods:v1.1.0
         resources:
           limits:
             memory: "256Mi"
