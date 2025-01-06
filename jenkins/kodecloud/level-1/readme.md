@@ -20,4 +20,5 @@ bash install.sh
 
 # to see the default admin password
  cat /var/lib/jenkins/secrets/initialAdminPassword
+ 
 ```
