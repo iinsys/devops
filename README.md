@@ -44,6 +44,11 @@ We welcome contributions from everyone! 🎉 If you have solutions, enhancements
 ## 📜 Code of Conduct
 We are committed to fostering a welcoming and respectful environment. Please read our [Code of Conduct](./CODE_OF_CONDUCT.md) to understand our expectations and help us maintain an inclusive community.
 
+## 🔒 Security
+
+For information about security-related issues and how to report vulnerabilities, please see our [SECURITY.md](./SECURITY.md).
+
+
 ## 📄 License
 This repository is licensed under the terms of the [ MIT license](./LICENSE). Feel free to use, modify, and distribute this code as per the license conditions.
 
