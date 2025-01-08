@@ -1,0 +1,6 @@
+apiVersion: v2
+name: grafana
+description: A Helm chart for Kubernetes
+version: 1.0.0
+appVersion: 8.0.0
+icon: https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png

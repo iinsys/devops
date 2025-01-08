@@ -1,0 +1,9 @@
+# Patterns to ignore when packaging Helm charts.
+*.swp
+*.bak
+*.tmp
+*.orig
+*.rej
+*.sh
+*.md
+*.yaml

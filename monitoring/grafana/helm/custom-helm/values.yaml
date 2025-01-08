@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  repository: grafana/grafana
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP # Change to NodePort if you prefer
+  port: 3000
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: grafana.local
+      paths:
+        - /
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 750Mi
+
+rbac:
+  create: false
