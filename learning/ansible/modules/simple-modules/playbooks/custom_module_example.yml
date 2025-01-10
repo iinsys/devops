@@ -1,0 +1,13 @@
+---
+- name: Example playbook using custom module
+  hosts: localhost
+  tasks:
+    - name: Greet user
+      custom_module:
+        name: John
+        state: present
+
+    - name: Farewell user
+      custom_module:
+        name: John
+        state: absent

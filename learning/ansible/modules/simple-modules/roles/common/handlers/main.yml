@@ -1,0 +1,6 @@
+---
+# Handlers for common tasks
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

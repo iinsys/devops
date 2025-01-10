@@ -1,0 +1,15 @@
+---
+- name: Manage services on remote hosts
+  hosts: all
+  tasks:
+    - name: Start nginx service
+      service:
+        name: nginx
+        state: started
+      become: true
+
+    - name: Stop nginx service
+      service:
+        name: nginx
+        state: stopped
+      become: true
