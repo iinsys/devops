@@ -1,0 +1,1 @@
+All cloud gcp projects
