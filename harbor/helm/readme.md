@@ -75,7 +75,7 @@ docker tag nginx:1.25.0 core.harbor.bansikah.com/k8s/nginx:1.25.0
 helm upgrade harbor harbor/harbor -f values-harbor.yaml -n harbor
 ```
 You should see this when you push the image
-[Pushed image](./docs/pushed-image.png)
+![Pushed image](./docs/pushed-image.png)
 
 ## Integrating k8s
 ```bash
