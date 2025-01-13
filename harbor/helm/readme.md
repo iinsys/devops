@@ -83,4 +83,4 @@ kubectl create deploy my-nginx --image=core.harbor.bansikah.com/k8s/nginx:1.25.0
 kubectl get pods
 ```
 you should see this 
-![Nginx deployment](./docs/pushed-image.png)
+![Nginx deployment](./docs/nginx-deployment.png)
