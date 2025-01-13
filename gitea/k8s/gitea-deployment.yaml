@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+        - name: gitea
+          image: gitea/gitea:latest
+          ports:
+            - containerPort: 3000  # Gitea's web interface port
+            - containerPort: 22    # Gitea's SSH port for Git operations
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          env:
+            - name: USER_UID
+              value: "1000"
+            - name: USER_GID
+              value: "1000"
+            - name: GITEA__database__DB_TYPE
+              value: "mysql"  
+            - name: GITEA__database__HOST
+              value: "gitea-db:3306"  
+            - name: GITEA__database__USER
+              value: "gitea"
+            - name: GITEA__database__PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: gitea-db-secret
+                  key: MYSQL_PASSWORD
+            - name: GITEA__server__ROOT_URL
+              value: "http://gitea.bansikah.com"
+          volumeMounts:
+            - mountPath: /data
+              name: gitea-data
+      volumes:
+        - name: gitea-data
+          persistentVolumeClaim:
+            claimName: gitea-pvc
