@@ -1,0 +1,7 @@
+externalURL: https://core.harbor.bansikah.com
+harborAdminPassword: "Harbor12345"
+expose:
+  ingress:
+    hosts:
+      core: core.harbor.bansikah.com
+    className: "nginx"
