@@ -1,0 +1,15 @@
+---
+- name: Synchronize timezone on app servers
+  hosts: app_servers
+  become: yes
+  tasks:
+    - name: Ensure timezone is set to America/Kralendijk
+      command: timedatectl set-timezone America/Kralendijk
+
+    - name: Verify the timezone
+      command: timedatectl
+      register: timezone_status
+
+    - name: Display the timezone verification result
+      debug:
+        var: timezone_status.stdout

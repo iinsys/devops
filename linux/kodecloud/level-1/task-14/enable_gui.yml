@@ -1,0 +1,7 @@
+- name: Configure GUI boot as default runlevel
+  hosts: stapp01
+  become: yes
+  tasks:
+    - name: Set graphical.target as default
+      ansible.builtin.command:
+        cmd: systemctl set-default graphical.target
