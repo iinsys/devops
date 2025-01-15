@@ -1,4 +1,6 @@
-Harbor is an open-source container registry that enhances the management and security of container images. It extends the capabilities of the open-source Docker Distribution by adding features such as security scanning, role-based access control, and content signing. Harbor is a Cloud Native Computing Foundation (CNCF) Graduated project, ensuring compliance, performance, and interoperability across cloud-native platforms like Kubernetes and Docker. 
+Harbor is an open-source container registry that enhances the management and security of container images. 
+- It extends the capabilities of the open-source Docker Distribution by adding features such as security scanning, role-based access control, and content signing.
+-  Harbor is a Cloud Native Computing Foundation (CNCF) Graduated project, ensuring compliance, performance, and interoperability across cloud-native platforms like Kubernetes and Docker. 
 HARBOR
 
 **Deploying Harbor on Minikube**
@@ -26,15 +28,9 @@ helm repo update
 helm repo list
 ```
 **Configure Harbor Values: Create a `values-harbor.yaml` file to customize your Harbor deployment.**
-```
-
 ```bash
 helm install harbor harbor/harbor -f values-harbor.yaml -n harbor --create-namespace
 echo "$(minikube ip) core.harbor.bansikah.com" | sudo tee -a /etc/hosts
-echo "$(minikube ip) core.harbor.bansikah.com" | sudo tee -a /etc/hosts
-
-
-
 ```
 
 **Access Harbor:**
@@ -71,6 +67,7 @@ docker pull nginx:1.25.0
 
 # tag image with registry name
 docker tag nginx:1.25.0 core.harbor.bansikah.com/k8s/nginx:1.25.0
+docker push core.harbor.bansikah.com/k8s/nginx:1.25.0
 
 helm upgrade harbor harbor/harbor -f values-harbor.yaml -n harbor
 ```
