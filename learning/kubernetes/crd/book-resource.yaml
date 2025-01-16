@@ -1,0 +1,10 @@
+# book-resource.yaml
+apiVersion: library.bansikah.com/v1
+kind: Book
+metadata:
+  name: war-and-peace
+spec:
+  title: "War and Peace"
+  author: "Leo Tolstoy"
+  publishedDate: "1869"
+  availableCopies: 10
