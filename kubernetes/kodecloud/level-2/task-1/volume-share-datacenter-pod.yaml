@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-share-datacenter
+spec:
+  volumes:
+  - name: volume-share
+    emptyDir: {}
+  containers:
+  - name: volume-container-datacenter-1
+    image: debian:latest
+    command: ["sleep", "infinity"]
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+    - name: volume-share
+      mountPath: /tmp/beta
+  - name: volume-container-datacenter-2
+    image: debian:latest
+    command: ["sleep", "infinity"]
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+    - name: volume-share
+      mountPath: /tmp/games
