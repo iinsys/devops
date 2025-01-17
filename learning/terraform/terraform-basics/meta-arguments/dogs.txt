@@ -1,0 +1,1 @@
+This is the content for ./dogs.txt
