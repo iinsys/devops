@@ -1,2 +1,4 @@
 *.pyc
 venv/
+# Ignore SSH private key
+my-key-pair.pem
