@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat-deployment-datacenter
+  namespace: tomcat-namespace-datacenter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat-app
+  template:
+    metadata:
+      labels:
+        app: tomcat-app
+    spec:
+      containers:
+      - name: tomcat-container-datacenter
+        image: gcr.io/kodekloud/centos-ssh-enabled:tomcat
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8080
