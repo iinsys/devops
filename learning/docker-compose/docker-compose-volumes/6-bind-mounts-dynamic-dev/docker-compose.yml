@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  app:
+    image: python:latest
+    container_name: python-app
+    volumes:
+      - ./src:/usr/src/app
+    working_dir: /usr/src/app
+    command: python app.py

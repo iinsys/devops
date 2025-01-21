@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  app:
+    image: myapp:latest
+    container_name: my-app
+    volumes:
+      - app-data:/data
+      - ./config:/config
+      - ./logs:/logs
+    ports:
+      - "5000:5000"
+
+volumes:
+  app-data:
+    driver: local

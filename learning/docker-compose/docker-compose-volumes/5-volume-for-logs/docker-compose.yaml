@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  app:
+    image: node:latest
+    container_name: node-app
+    volumes:
+      - ./logs:/usr/src/app/logs
+    working_dir: /usr/src/app
+    command: >
+      sh -c "echo 'Starting Node.js application' && 
+      mkdir -p logs && 
+      echo 'App started successfully' > logs/app.log"

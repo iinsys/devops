@@ -1,0 +1,8 @@
+version: '3.7'
+
+services:
+  temp-service:
+    image: nginx:latest
+    container_name: temp-nginx
+    tmpfs:
+      - /tmp
