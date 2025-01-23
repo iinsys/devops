@@ -1,0 +1,1 @@
+To master your terminal,  i fould some owesome video with short cuts, watch the video [Master your terminal](https://itnext.io/the-zsh-shell-tricks-i-wish-id-known-earlier-ae99e91c53c2)
