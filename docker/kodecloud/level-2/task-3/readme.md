@@ -20,3 +20,11 @@ docker images
 
 # test
 docker run -it games:nautilus /bin/bash
+
+```
+`Note`: 
+`Description`
+It can be useful to commit a container's file changes or settings into a new image. This lets you debug a container by running an interactive shell, or export a working dataset to another server.
+
+`Commits do not include any data contained in mounted volumes`.
+[Read more about it here](https://docs.docker.com/reference/cli/docker/container/commit/)
