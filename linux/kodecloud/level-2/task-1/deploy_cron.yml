@@ -1,0 +1,25 @@
+---
+- name: Configure cron jobs on app servers
+  hosts: app_servers
+  become: true
+
+  tasks:
+    - name: Install cronie package
+      yum:
+        name: cronie
+        state: present
+      timeout: 300
+
+    - name: Ensure crond service is started and enabled
+      service:
+        name: crond
+        state: started
+        enabled: true
+
+    - name: Add cron job for root user
+      cron:
+        name: "Sample Cron Job to echo hello"
+        minute: "*/5"
+        job: "echo hello > /tmp/cron_text"
+        user: root
+        state: present
