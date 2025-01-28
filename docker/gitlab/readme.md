@@ -1,0 +1,1 @@
+Visit this link to read more it really help me [stackoverflow](https://stackoverflow.com/questions/53656537/install-sdkman-in-docker-image)
