@@ -45,4 +45,4 @@ RUN echo "source /root/.sdkman/bin/sdkman-init.sh" >> /root/.bashrc
 # Set bash as the default shell for the container
 ENTRYPOINT ["/bin/bash", "-c", "source /root/.bashrc && exec /bin/bash"]
 
-CMD ["/bin/bash"]
+
