@@ -1,0 +1,21 @@
+---
+- name: Update MOTD on application and database servers
+  hosts: app_servers:db_servers
+  become: true
+
+  tasks:
+    - name: Copy MOTD template to servers
+      copy:
+        src: /home/thor/nautilus_banner
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Verify MOTD content
+      shell: cat /etc/motd
+      register: motd_content
+
+    - name: Display MOTD verification
+      debug:
+        msg: "MOTD on {{ inventory_hostname }}: {{ motd_content.stdout }}"

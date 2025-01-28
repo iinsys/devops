@@ -65,6 +65,11 @@ OR RUN IN DEBUG MODE
 ansible-playbook -i hosts.ini deploy_cron.yml -vvv
 
 
+## verify ssh into one of the servers
+crontab -l
+cat /tmp/cron_text
+watch -n 5 cat /tmp/cron_text
+
 ```
 
 
