@@ -1,0 +1,51 @@
+version: 2
+updates:
+  # 1. Enable Dependency Updates
+  - package-ecosystem: "docker"
+    directory: "/docker"  # Root directory
+    schedule:
+      interval: "daily"  # More frequent updates for security patches
+    open-pull-requests-limit: 10  # Prevent too many PRs
+    reviewers:
+      - "bansikah22"
+    labels:
+      - "dependencies"
+      - "security"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    allow:
+      - dependency-type: "direct"
+  
+  # Enable GitHub Actions Dependency Updates
+  - package-ecosystem: "github-actions"
+    directory: "/"  # Keep GitHub Actions up to date
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "bansikah22"
+    labels:
+      - "CI/CD"
+      - "dependencies"
+
+  # Enable Docker Image Updates
+  - package-ecosystem: "docker"
+    directory: "/" 
+    schedule:
+      interval: "weekly"
+    labels:
+      - "docker"
+      - "dependencies"
+    ignore:
+      - dependency-name: "ubuntu"  
+
+  # Enable Secret Scanning Alerts (GitHub Advanced Security)
+  - package-ecosystem: "security"
+    directory: "/"
+    schedule:
+      interval: "daily"  # Frequent secret scanning
+    labels:
+      - "security"
+      - "secret-scanning"
+
+
