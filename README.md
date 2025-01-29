@@ -1,6 +1,11 @@
 # DevOps Tools and Solutions Repository
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops?ref=badge_shield)
+### Project Status
+![GitHub last commit](https://img.shields.io/github/last-commit/bansikah22/devops)
+![GitHub repo size](https://img.shields.io/github/repo-size/bansikah22/devops)
+![GitHub issues](https://img.shields.io/github/issues/bansikah22/devops)
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbansikah22%2Fdevops?ref=badge_shield)
+[![Dependabot Status](https://img.shields.io/badge/Dependabot-Enabled-brightgreen?logo=dependabot)](https://github.com/bansikah22/devops/network/updates)
 
 Welcome to the **DevOps Tools and Solutions** repository! 🎉
 
