@@ -1,0 +1,22 @@
+- name: Setup /devops/data directory with permissions
+  hosts: app_servers
+  become: yes
+  tasks:
+    - name: Ensure devops group exists
+      group:
+        name: devops
+        state: present
+
+    - name: Create /devops/data directory
+      file:
+        path: /devops/data
+        state: directory
+        owner: root
+        group: devops
+        mode: "2770"
+
+    - name: Add steve to devops group
+      user:
+        name: steve
+        groups: devops
+        append: yes
