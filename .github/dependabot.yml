@@ -1,11 +1,11 @@
 version: 2
 updates:
-  # 1. Enable Dependency Updates
+  # Docker Image Updates
   - package-ecosystem: "docker"
-    directory: "/docker"  # Root directory
+    directory: "/"
     schedule:
-      interval: "daily"  # More frequent updates for security patches
-    open-pull-requests-limit: 10  # Prevent too many PRs
+      interval: "daily"
+    open-pull-requests-limit: 10
     reviewers:
       - "bansikah22"
     labels:
@@ -16,10 +16,12 @@ updates:
       include: "scope"
     allow:
       - dependency-type: "direct"
-  
-  # Enable GitHub Actions Dependency Updates
+    ignore:
+      - dependency-name: "ubuntu"
+
+  # GitHub Actions Updates
   - package-ecosystem: "github-actions"
-    directory: "/"  # Keep GitHub Actions up to date
+    directory: "/"
     schedule:
       interval: "weekly"
     reviewers:
@@ -28,24 +30,44 @@ updates:
       - "CI/CD"
       - "dependencies"
 
-  # Enable Docker Image Updates
-  - package-ecosystem: "docker"
-    directory: "/" 
+  # Go Modules Updates
+  - package-ecosystem: "gomod"
+    directory: "/golang"  
     schedule:
       interval: "weekly"
+    reviewers:
+      - "bansikah22"
     labels:
-      - "docker"
+      - "go"
       - "dependencies"
-    ignore:
-      - dependency-name: "ubuntu"  
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
 
-  # Enable Secret Scanning Alerts (GitHub Advanced Security)
-  - package-ecosystem: "security"
-    directory: "/"
+  # # Rust (Cargo) Updates
+  # - package-ecosystem: "cargo"
+  #   directory: "/"  
+  #   schedule:
+  #     interval: "weekly"
+  #   reviewers:
+  #     - "bansikah22"
+  #   labels:
+  #     - "rust"
+  #     - "dependencies"
+  #   commit-message:
+  #     prefix: "chore(deps)"
+  #     include: "scope"
+
+  # Terraform Updates
+  - package-ecosystem: "terraform"
+    directory: "/terraform"  
     schedule:
-      interval: "daily"  # Frequent secret scanning
+      interval: "weekly"
+    reviewers:
+      - "bansikah22"
     labels:
-      - "security"
-      - "secret-scanning"
-
-
+      - "terraform"
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
