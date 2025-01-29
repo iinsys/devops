@@ -27,16 +27,16 @@ source ~/.bashrc
 ## set var for root vault token
 export TF_VAR_vault_token='<vault_root_token>' ## you should see this where you started the vault serve and it is running
 
-tf init
-tf plan
-tf apply
-
 vault kv put secret/myapp/database \
 mysql_username="Bob123" \
 mysql_password="supersecret" 
 
 ## get secret for verification
 vault kv get secret/myapp/database
+
+tf init
+tf plan
+tf apply
 
 ## enabling
 # Reload systemd
