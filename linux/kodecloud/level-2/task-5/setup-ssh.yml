@@ -1,0 +1,32 @@
+---
+- name: Setup Password-less SSH Access
+  hosts: app_servers
+  become: false
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  
+  tasks:
+    - name: Generate SSH key (if not exists)
+      command: ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
+      delegate_to: localhost
+      run_once: true
+      ignore_errors: true
+
+    - name: Fetch Public Key
+      shell: cat ~/.ssh/id_rsa.pub
+      delegate_to: localhost
+      register: ssh_public_key
+      run_once: true
+
+    - name: Create .ssh directory on remote server
+      file:
+        path: ~/.ssh
+        state: directory
+        mode: '0700'
+
+    - name: Copy Public Key to authorized_keys
+      lineinfile:
+        path: ~/.ssh/authorized_keys
+        line: "{{ ssh_public_key.stdout }}"
+        create: yes
+        mode: '0600'

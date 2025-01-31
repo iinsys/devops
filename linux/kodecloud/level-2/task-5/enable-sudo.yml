@@ -1,0 +1,12 @@
+---
+- name: Enable passwordless sudo for app servers
+  hosts: app_servers
+  become: true
+
+  tasks:
+    - name: Allow sudo without password for users
+      lineinfile:
+        path: /etc/sudoers.d/{{ ansible_user }}
+        line: "{{ ansible_user }} ALL=(ALL) NOPASSWD:ALL"
+        create: yes
+        validate: 'visudo -cf %s'
