@@ -1,0 +1,9 @@
+---
+- name: Install net-tools on all App Servers
+  hosts: app_servers
+  become: true
+  tasks:
+    - name: Install net-tools package
+      package:
+        name: net-tools
+        state: present
