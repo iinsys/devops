@@ -1,0 +1,30 @@
+---
+- name: Fix Postfix on Stratos DC Servers
+  hosts: app_servers
+  become: yes
+  tasks:
+
+    - name: Check if IPv6 is enabled
+      command: sysctl -n net.ipv6.conf.all.disable_ipv6
+      register: ipv6_status
+      changed_when: false
+
+    - name: Update Postfix configuration to use IPv4 only
+      lineinfile:
+        path: /etc/postfix/main.cf
+        regexp: '^inet_interfaces'
+        line: 'inet_interfaces = 127.0.0.1'
+      when: ipv6_status.stdout == "1"
+
+    - name: Restart Postfix service
+      systemd:
+        name: postfix
+        state: restarted
+      ignore_errors: yes
+
+    - name: Verify Postfix service status
+      systemd:
+        name: postfix
+        state: started
+      register: postfix_status
+      failed_when: postfix_status.status.ActiveState != "active"

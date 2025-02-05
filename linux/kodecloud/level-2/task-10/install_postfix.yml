@@ -1,0 +1,24 @@
+---
+- name: Install and Enable Postfix on App Servers
+  hosts: app_servers
+  become: yes
+  vars:
+    ansible_become_method: sudo
+  tasks:
+    - name: Stop and Disable Sendmail (if running)
+      systemd:
+        name: sendmail
+        state: stopped
+        enabled: no
+      ignore_errors: yes
+
+    - name: Install Postfix
+      package:
+        name: postfix
+        state: present
+
+    - name: Enable and Start Postfix Service
+      systemd:
+        name: postfix
+        enabled: yes
+        state: restarted
