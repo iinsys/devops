@@ -5,6 +5,8 @@
 
 # 1️⃣ Create an S3 bucket for Terraform state storage
 aws s3api create-bucket --bucket nb-tf-state-management --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
+## when you want to destroy the infrastructure do this first if you deleted the s3 bucket manually 
+aws s3 mb s3://nb-tf-state-management22
 
 # 2️⃣ Enable versioning on the S3 bucket (optional but recommended)
 aws s3api put-bucket-versioning --bucket  nb-tf-state-management --versioning-configuration Status=Enabled
