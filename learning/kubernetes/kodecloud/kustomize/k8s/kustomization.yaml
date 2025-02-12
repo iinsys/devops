@@ -1,0 +1,8 @@
+# kubernetes resource to be managed by kustomize
+resources:
+  - nginx-depl.yml
+  - nginx-service.yml
+
+# customizations that need to be made
+commonLabels:
+  company: Bansico
