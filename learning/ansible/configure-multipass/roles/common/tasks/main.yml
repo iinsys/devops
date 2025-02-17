@@ -1,0 +1,6 @@
+---
+# Common tasks for all nodes
+- name: Ensure /tmp/common_directory exists
+  file:
+    path: /tmp/common_directory
+    state: directory 

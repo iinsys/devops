@@ -1,0 +1,58 @@
+---
+# Common tasks for all nodes
+
+- name: Ensure /tmp/common_directory exists
+  file:
+    path: /tmp/common_directory
+    state: directory
+
+- name: Install required packages
+  apt:
+    name: 
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+    state: present
+
+- name: Add Docker’s official GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+    state: present
+
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Install Git
+  apt:
+    name: git
+    state: present
+
+# Handlers for common tasks
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+- name: Restart Docker
+  service:
+    name: docker
+    state: restarted
+
+- name: Restart Git
+  service:
+    name: git
+    state: restarted 

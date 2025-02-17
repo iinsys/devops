@@ -1,0 +1,15 @@
+---
+- name: Manage packages on remote hosts
+  hosts: all
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+      become: true
+
+    - name: Remove nginx
+      apt:
+        name: nginx
+        state: absent
+      become: true 
