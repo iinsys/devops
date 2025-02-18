@@ -40,6 +40,35 @@ configure-multipass/
 
 - **ansible.cfg**: This configuration file sets default values for Ansible, including the location of the inventory files.
 
+## How to Run the Project
+
+To run the Ansible playbooks in this project, follow these steps:
+
+1. **Install Ansible**: Ensure that Ansible is installed on your machine. You can install it using pip:
+   ```bash
+   pip install ansible
+   ```
+
+2. **Navigate to the Project Directory**: Open a terminal and navigate to the `configure-multipass` directory:
+   ```bash
+   cd devops/learning/ansible/configure-multipass
+   ```
+
+3. **Run a Playbook**: Use the `ansible-playbook` command to execute a specific playbook. For example, to install Docker, run:
+   ```bash
+   ##test inventory
+   ansible-inventory -i inventory/staging/hosts.ini --list
+
+   ansible-playbook playbooks/install_docker.yml -i inventory/production/hosts.ini
+   ```
+
+4. **Run Other Playbooks**: Similarly, you can run other playbooks by specifying their names. For example, to install Git:
+   ```bash
+   ansible-playbook playbooks/install_git.yml -i inventory/staging/hosts.ini
+   ```
+
+5. **Check the Status**: After running the playbooks, you can check the status of the services or configurations as needed.
+
 ## Conclusion
 
 This project structure is designed to facilitate the management of configurations and deployments across different environments using Ansible. Each component is organized to promote clarity and reusability, making it easier to maintain and extend the setup as needed.
