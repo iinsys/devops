@@ -1,0 +1,111 @@
+Resources:
+  ConfigBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: "inventory-compliancepack-eu-central1"
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AWSConfigBucketPermissionsCheck
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: "arn:aws:s3:::inventory-compliancepack-eu-central1"
+          - Sid: AWSConfigBucketDelivery
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:PutObject
+            Resource: "arn:aws:s3:::inventory-compliancepack-eu-central1/AWSLogs/474186657584/*"
+            Condition:
+              StringEquals:
+                's3:x-amz-acl': 'bucket-owner-full-control'
+
+  ConfigRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "AWSConfigRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWS_ConfigRole
+      Policies:
+        - PolicyName: ConfigS3Policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetBucketAcl
+                Resource:
+                  - "arn:aws:s3:::inventory-compliancepack-eu-central1"
+                  - "arn:aws:s3:::inventory-compliancepack-eu-central1/*"
+
+  AWSConfig:
+    Type: AWS::Config::ConfigurationRecorder
+    Properties:
+      Name: config-recorder
+      RoleARN: 
+        Fn::GetAtt: 
+          - ConfigRole
+          - Arn
+      RecordingGroup:
+        AllSupported: true
+        IncludeGlobalResources: true
+
+  EC2TagComplianceRule:
+    Type: AWS::Config::ConfigRule
+    DependsOn: AWSConfig
+    Properties:
+      ConfigRuleName: ec2-required-tags-check
+      Description: "Checks if EC2 instances have required tags and owner information"
+      InputParameters:
+        tag1Key: "Project"
+        tag2Key: "Owner"
+        tag3Key: "Name"
+        tag4Key: "OwnerEmail"
+      Scope:
+        ComplianceResourceTypes:
+          - "AWS::EC2::Instance"
+      Source:
+        Owner: AWS
+        SourceIdentifier: REQUIRED_TAGS
+
+  ComplianceEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: ec2-tag-compliance-rule
+      Description: "Monitor EC2 instances for tag compliance and notify owners"
+      State: ENABLED
+      EventPattern:
+        source:
+          - "aws.config"
+        detail-type:
+          - "Config Rules Compliance Change"
+        detail:
+          configRuleName:
+            - "ec2-required-tags-check"
+          newEvaluationResult:
+            complianceType:
+              - "NON_COMPLIANT"
+      Targets:
+        - Arn: "arn:aws:sns:eu-west-1:474186657584:eu-west-1-topic"
+          Id: "SendToSNS"
+          InputTransformer:
+            InputPathsMap:
+              instance: "$.detail.resourceId"
+              compliance: "$.detail.newEvaluationResult.complianceType"
+              annotation: "$.detail.newEvaluationResult.annotation"
+            InputTemplate: |
+              "EC2 Tag Compliance Alert!
+              Instance ID: <instance>
+              Compliance Status: <compliance>
+              Details: <annotation>
+              Please ensure all required tags (Project, Owner, Name, OwnerEmail) are properly set."

@@ -1,0 +1,448 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Custom Conformance Pack to enforce tagging across all AWS resources'
+
+Resources:
+  # S3 Bucket for AWS Config to store configuration history and snapshots
+  ConfigBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 
+        Fn::Sub: "config-tagging-compliance-${AWS::AccountId}-${AWS::Region}"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  # Bucket policy to allow AWS Config to write to the bucket
+  ConfigBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: 
+        Ref: ConfigBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AWSConfigBucketPermissionsCheck
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: 
+              Fn::Sub: "${ConfigBucket.Arn}"
+          - Sid: AWSConfigBucketDelivery
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:PutObject
+            Resource: 
+              Fn::Sub: "${ConfigBucket.Arn}/AWSLogs/${AWS::AccountId}/*"
+            Condition:
+              StringEquals:
+                's3:x-amz-acl': 'bucket-owner-full-control'
+
+  # SNS Topic for Notifications
+  ComplianceNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: tagging-compliance-notifications
+      DisplayName: "AWS Resource Tagging Compliance Notifications"
+
+  # IAM Role for AWS Config
+  ConfigRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "AWSConfigTaggingComplianceRole"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWS_ConfigRole
+      Policies:
+        - PolicyName: ConfigS3Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetBucketAcl
+                Resource:
+                  - Fn::GetAtt: [ConfigBucket, Arn]
+                  - Fn::Join: ["/", [Fn::GetAtt: [ConfigBucket, Arn], "/*"]]
+        - PolicyName: ConfigSNSPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: 
+                  Fn::GetAtt: 
+                    - ComplianceNotificationTopic
+                    - Arn
+
+  # AWS Config Configuration Recorder
+  ConfigRecorder:
+    Type: AWS::Config::ConfigurationRecorder
+    Properties:
+      Name: tagging-compliance-recorder
+      RoleARN: 
+        Fn::GetAtt: 
+          - ConfigRole
+          - Arn
+      RecordingGroup:
+        AllSupported: true
+        IncludeGlobalResources: true
+
+  # AWS Config Delivery Channel
+  ConfigDeliveryChannel:
+    Type: AWS::Config::DeliveryChannel
+    DependsOn: ConfigBucketPolicy
+    Properties:
+      Name: tagging-compliance-delivery-channel
+      S3BucketName: 
+        Ref: ConfigBucket
+      ConfigSnapshotDeliveryProperties:
+        DeliveryFrequency: TwentyFour_Hours
+
+  # Lambda Role for processing compliance events
+  ComplianceProcessorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ResourceTaggingPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - tag:GetResources
+                  - tag:GetTagKeys
+                  - tag:GetTagValues
+                  - config:GetResourceConfigHistory
+                  - config:DescribeConfigRules
+                  - sns:Publish
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - ses:SendEmail
+                  - ses:SendRawEmail
+                Resource: '*'
+
+  # Lambda Function to process compliance events and send notifications
+  ComplianceProcessorFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: tagging-compliance-processor
+      Runtime: python3.9
+      Handler: index.lambda_handler
+      Role: 
+        Fn::GetAtt: 
+          - ComplianceProcessorRole
+          - Arn
+      Timeout: 60
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: 
+            Fn::Sub: "${ComplianceNotificationTopic}"
+          FROM_EMAIL: "noel.tandap@adorsys.com"  
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+
+          def lambda_handler(event, context):
+              print("Event received:", json.dumps(event))
+              
+              # Get the resource ID and compliance details
+              detail = event.get('detail', {})
+              resource_id = detail.get('resourceId', 'Unknown')
+              rule_name = detail.get('configRuleName', 'Unknown')
+              compliance_type = detail.get('newEvaluationResult', {}).get('complianceType', 'Unknown')
+              annotation = detail.get('newEvaluationResult', {}).get('annotation', 'No details available')
+              
+              if compliance_type != 'NON_COMPLIANT':
+                  print(f"Resource {resource_id} is compliant. No action needed.")
+                  return
+              
+              # Get the resource type
+              resource_type = detail.get('resourceType', 'Unknown')
+              
+              # Get the resource tags to find owner email
+              tagging_client = boto3.client('resourcegroupstaggingapi')
+              config_client = boto3.client('config')
+              sns_client = boto3.client('sns')
+              ses_client = boto3.client('ses')
+              
+              # The required tags we're checking for
+              required_tags = ['Project', 'Owner', 'Name', 'OwnerEmail']
+              
+              try:
+                  # Get the ARN of the resource
+                  config_resource = config_client.get_resource_config_history(
+                      resourceType=resource_type,
+                      resourceId=resource_id,
+                      limit=1
+                  )
+                  
+                  if 'configurationItems' in config_resource and config_resource['configurationItems']:
+                      resource_arn = config_resource['configurationItems'][0].get('arn', '')
+                      
+                      # Get tags for the resource
+                      tagged_resources = tagging_client.get_resources(
+                          ResourceARNList=[resource_arn]
+                      )
+                      
+                      owner_email = None
+                      missing_tags = []
+                      
+                      if tagged_resources.get('ResourceTagMappingList'):
+                          tags = tagged_resources['ResourceTagMappingList'][0].get('Tags', [])
+                          tag_dict = {tag['Key']: tag['Value'] for tag in tags}
+                          
+                          # Check for owner email
+                          owner_email = tag_dict.get('OwnerEmail')
+                          
+                          # Check which required tags are missing
+                          for tag in required_tags:
+                              if tag not in tag_dict:
+                                  missing_tags.append(tag)
+                      else:
+                          missing_tags = required_tags
+                      
+                      # Prepare notification message
+                      message = f"""
+                      AWS Resource Tagging Compliance Alert!
+                      
+                      Resource ID: {resource_id}
+                      Resource Type: {resource_type}
+                      Resource ARN: {resource_arn}
+                      Compliance Status: {compliance_type}
+                      Rule: {rule_name}
+                      
+                      Details: {annotation}
+                      
+                      Missing Required Tags: {', '.join(missing_tags)}
+                      
+                      Please update your resource with all required tags:
+                      {', '.join(required_tags)}
+                      """
+                      
+                      # Publish to SNS topic
+                      sns_client.publish(
+                          TopicArn=os.environ['SNS_TOPIC_ARN'],
+                          Message=message,
+                          Subject=f"AWS Tagging Compliance Alert - {resource_id}"
+                      )
+                      
+                      # If owner email is available, send direct email
+                      if owner_email:
+                          try:
+                              ses_client.send_email(
+                                  Source=os.environ['FROM_EMAIL'],
+                                  Destination={
+                                      'ToAddresses': [owner_email]
+                                  },
+                                  Message={
+                                      'Subject': {
+                                          'Data': f"AWS Tagging Compliance Alert - {resource_id}"
+                                      },
+                                      'Body': {
+                                          'Text': {
+                                              'Data': message
+                                          }
+                                      }
+                                  }
+                              )
+                              print(f"Email sent to resource owner at {owner_email}")
+                          except Exception as e:
+                              print(f"Error sending email to {owner_email}: {str(e)}")
+                      else:
+                          print("No owner email tag found on the resource")
+                  
+              except Exception as e:
+                  print(f"Error processing compliance event: {str(e)}")
+                  
+              return {
+                  'statusCode': 200,
+                  'body': json.dumps('Compliance notification processed')
+              }
+
+  # Config Rule for required tags across all resources
+  RequiredTagsConfigRule:
+    Type: AWS::Config::ConfigRule
+    DependsOn: ConfigRecorder
+    Properties:
+      ConfigRuleName: required-tags-all-resources
+      Description: "Checks if resources have all required tags (Project, Owner, Name, OwnerEmail)"
+      InputParameters:
+        tag1Key: "Project"
+        tag2Key: "Owner"
+        tag3Key: "Name"
+        tag4Key: "OwnerEmail"
+      Scope:
+        ComplianceResourceTypes: []  # Empty list means all supported resource types
+      Source:
+        Owner: AWS
+        SourceIdentifier: REQUIRED_TAGS
+
+  # CloudWatch Event Rule to trigger Lambda on compliance change
+  ComplianceEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: tagging-compliance-rule
+      Description: "Monitor AWS resources for tag compliance and notify owners"
+      State: ENABLED
+      EventPattern:
+        source:
+          - "aws.config"
+        detail-type:
+          - "Config Rules Compliance Change"
+        detail:
+          configRuleName:
+            - "required-tags-all-resources"
+          newEvaluationResult:
+            complianceType:
+              - "NON_COMPLIANT"
+      Targets:
+        - Arn: 
+            Fn::GetAtt: 
+              - ComplianceProcessorFunction
+              - Arn
+          Id: "ProcessComplianceEvent"
+
+  # Permission for CloudWatch Events to invoke the Lambda function
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: 
+        Fn::GetAtt: 
+          - ComplianceProcessorFunction
+          - Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/${ComplianceEventRule}
+
+  # Lambda function to start the Config Recorder
+  StartConfigRecorderFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: 
+        Fn::GetAtt: 
+          - StartConfigRecorderRole
+          - Arn
+      Runtime: python3.9
+      Timeout: 60
+      Code:
+        ZipFile: |
+          import cfnresponse
+          import boto3
+          
+          def handler(event, context):
+              config = boto3.client('config')
+              responseData = {}
+              
+              try:
+                  # Check if this is a Create operation
+                  if event['RequestType'] == 'Create':
+                      # Start the configuration recorder
+                      recorder_name = event['ResourceProperties']['ConfigurationRecorderName']
+                      config.start_configuration_recorder(
+                          ConfigurationRecorderName=recorder_name
+                      )
+                      responseData['Message'] = 'Configuration recorder started successfully'
+                  
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+              except Exception as e:
+                  responseData['Error'] = str(e)
+                  cfnresponse.send(event, context, cfnresponse.FAILED, responseData)
+
+  # Start the Config Recorder
+  ConfigRecorderSetup: 
+    Type: Custom::ConfigRecorderSetup
+    DependsOn:
+      - ConfigRecorder
+      - ConfigDeliveryChannel
+    Properties:
+      ServiceToken: 
+        Fn::GetAtt: 
+          - StartConfigRecorderFunction
+          - Arn
+      ConfigurationRecorderName: 
+        Ref: ConfigRecorder
+
+  # IAM role for the StartConfigRecorderFunction Lambda
+  StartConfigRecorderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: ConfigRecorderPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - config:StartConfigurationRecorder
+                  - config:DescribeConfigurationRecorderStatus
+                Resource: '*'
+
+  # Email Subscription to SNS Topic for compliance notifications
+  AdminEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email
+      TopicArn: 
+        Fn::GetAtt: 
+          - ComplianceNotificationTopic
+          - Arn
+      Endpoint: "noel.tandap@adorsys.com"  
+
+Outputs:
+  ConfigRuleName:
+    Description: "Name of the Config Rule for required tags"
+    Value: 
+      Ref: RequiredTagsConfigRule
+  
+  SNSTopicARN:
+    Description: "ARN of the SNS Topic for compliance notifications"
+    Value: 
+      Fn::GetAtt: 
+        - ComplianceNotificationTopic
+        - Arn
+  
+  ConfigBucketName:
+    Description: "Name of the S3 bucket for AWS Config data"
+    Value: 
+      Ref: ConfigBucket
