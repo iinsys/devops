@@ -1,0 +1,23 @@
+name: PR Summarizer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write  # Required to comment on PRs
+  issues: write        # Required for PR comments via issues API
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures full history for diff analysis
+
+      - name: Run PR Summarizer
+        uses: bansikah22/pr-summarizer@v1.0.0  # Uses the lastest actions tag
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
