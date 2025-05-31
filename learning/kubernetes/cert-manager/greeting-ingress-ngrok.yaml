@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: greeting-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+spec:
+  tls:
+  - hosts:
+    - 5f4b4108.ngrok.io
+    secretName: echo-tls
+  rules:
+  - http:
+      paths:
+        - path: /hello
+          backend:
+            serviceName: hello-service
+            servicePort: 5678
+        - path: /welcome
+          backend:
+            serviceName: welcome-service
+            servicePort: 5678

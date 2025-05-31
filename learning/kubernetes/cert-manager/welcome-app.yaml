@@ -1,0 +1,29 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: welcome-app
+  labels:
+    app: welcome
+spec:
+  containers:
+    - name: welcome-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=welcome"
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: welcome-service
+spec:
+  selector:
+    app: welcome
+  ports:
+    - port: 5678 # Default port for image

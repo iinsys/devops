@@ -10,18 +10,14 @@ Serve your web apps over **HTTPS** locally using **Nginx Ingress**, **Cert-Manag
 - `kubectl` installed and configured
 - `helm` installed
 - An [ngrok](https://ngrok.com/) account + installed CLI
-- A **public domain or use ngrok’s temporary one** (for HTTPS validation)
 
 ---
 
-## 1️⃣ Start Minikube and Enable Tunnel
+## 1️⃣ Start Minikube
 
 ```bash
 minikube start
-minikube tunnel
 ```
-
-Leave the `minikube tunnel` running in a separate terminal. It enables LoadBalancer services to work.
 
 ---
 
@@ -31,18 +27,6 @@ Leave the `minikube tunnel` running in a separate terminal. It enables LoadBalan
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
-helm install ingress-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress-nginx --create-namespace
-```
-Incase you encounter error 
-```bash
-# Delete the existing namespace and everything in it
-kubectl delete namespace ingress-nginx
-
-# Wait until the namespace is fully deleted
-kubectl get ns
-
-# Reinstall using Helm
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx --create-namespace
 ```
@@ -80,33 +64,14 @@ kubectl get pods -n cert-manager
 ## 4️⃣ Start ngrok to Expose Minikube
 
 ```bash
-ngrok http 80
+ngrok http <minikube ip>:80
 ```
 
 Copy the forwarded domain (e.g., `https://your-xyz.ngrok.io`). You will use it as your **Ingress host**.
 
 ---
 
-## 5️⃣ Create ClusterIssuer for Let’s Encrypt (Staging for testing)
-
-**`letsencrypt-staging.yaml`**
-
-```yaml
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-staging
-spec:
-  acme:
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: youremail@example.com
-    privateKeySecretRef:
-      name: letsencrypt-staging-account-key
-    solvers:
-      - http01:
-          ingress:
-            class: nginx
-```
+## 5️⃣ Apply ClusterIssuer Configuration
 
 ```bash
 kubectl apply -f letsencrypt-staging.yaml
@@ -114,103 +79,67 @@ kubectl apply -f letsencrypt-staging.yaml
 
 ---
 
-## 6️⃣ Deploy Example App
+## 6️⃣ Deploy Applications
 
-```bash
-kubectl create namespace demo
-kubectl create deployment hello-world --image=nginx -n demo
-kubectl expose deployment hello-world --port=80 --type=ClusterIP -n demo
-```
-
----
-
-## 7️⃣ Create Ingress Resource Using ngrok Host
-
-Replace `your-xyz.ngrok.io` with your **actual ngrok URL**.
-
-**`hello-world-ingress.yaml`**
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: hello-world-ingress
-  namespace: demo
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - your-xyz.ngrok.io
-      secretName: hello-world-tls
-  rules:
-    - host: your-xyz.ngrok.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: hello-world
-                port:
-                  number: 80
-```
-
-Apply:
-
-```bash
-kubectl apply -f hello-world-ingress.yaml
-```
+- Apply the `hello-app.yaml` file:
+  ```bash
+  kubectl apply -f hello-app.yaml
+  ```
+- Apply the `welcome-app.yaml` file:
+  ```bash
+  kubectl apply -f welcome-app.yaml
+  ```
 
 ---
 
-## 8️⃣ Verify Certificate Issuance
+## 7️⃣ Set Up Ingress
 
-```bash
-kubectl describe ingress hello-world-ingress -n demo
-kubectl get certificate -n demo
-kubectl logs -n cert-manager deploy/cert-manager
-```
-
-### Debuging 
-```bash
-kubectl describe certificate hello-world-tls -n demo
-kubectl get challenge -n demo
-kubectl describe challenge <challenge-name> -n demo
-kubectl logs -n cert-manager deploy/cert-manager
-```
-
-Visit:
-
-```text
-https://your-xyz.ngrok.io
-```
-
-You should see the Nginx welcome page — served over **HTTPS** with a valid (staging) Let’s Encrypt certificate.
+- Apply the ingress configuration with the ngrok URL:
+  ```bash
+  kubectl apply -f greeting-ingress-ngrok.yaml
+  ```
+- Apply the ingress configuration without the ngrok URL:
+  ```bash
+  kubectl apply -f greeting-ingress.yaml
+  ```
 
 ---
 
-## ✅ Final Notes
+## Debugging Steps
 
-- **Let’s Encrypt staging** is for testing — use `letsencrypt-production.yaml` only after confirming it works.
-- For **custom domains**, you can CNAME to the ngrok domain or use DNS-01 challenges instead.
+1. **Check Pod Status**
+   ```bash
+   kubectl get pods
+   ```
+   Ensure all pods are running without errors.
 
----
+2. **Check Service Status**
+   ```bash
+   kubectl get services
+   ```
+   Verify that the services are correctly exposed.
 
-## 🔁 Automatic Renewal
+3. **Check Ingress Status**
+   ```bash
+   kubectl get ingress
+   ```
+   Confirm that the ingress rules are applied and the host URLs are accessible.
 
-Cert-Manager handles renewals automatically. Once set up, certificates will renew before expiration.
+4. **Inspect Logs**
+   - For pods:
+     ```bash
+     kubectl logs <pod-name>
+     ```
+   - For ingress controller:
+     ```bash
+     kubectl logs -n ingress-nginx <controller-pod-name>
+     ```
 
----
+5. **Test Connectivity**
+   Use `curl` or a browser to test the URLs defined in the ingress configurations.
 
-## 🛠 Troubleshooting
-
-```bash
-kubectl describe certificate hello-world-tls -n demo
-kubectl describe challenge -n demo
-kubectl logs -n cert-manager deploy/cert-manager
-```
-
-✅ That’s it! You now have HTTPS for your local Minikube app using Let’s Encrypt and ngrok! 🚀
+6. **Verify Certificates**
+   Check if TLS certificates are correctly issued:
+   ```bash
+   kubectl describe certificate
+   ```
