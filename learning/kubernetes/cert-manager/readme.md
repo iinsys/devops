@@ -93,16 +93,71 @@ kubectl apply -f letsencrypt-staging.yaml
 ---
 
 ## 7️⃣ Set Up Ingress
-
-- Apply the ingress configuration with the ngrok URL:
-  ```bash
-  kubectl apply -f greeting-ingress-ngrok.yaml
   ```
 - Apply the ingress configuration without the ngrok URL:
   ```bash
   kubectl apply -f greeting-ingress.yaml
-  ```
 
+  ## test on the browser 
+  http://192.168.49.2/hello
+  http://192.168.49.2/welcome
+  ## Ensure it works with normal ingress first if you are facing any issue enable the ingress by using 
+  minikube addons enable ingress
+  ```
+- Apply the ingress configuration with the ngrok URL:
+  ```bash
+  kubectl apply -f greeting-ingress-ngrok.yaml
+
+  ## you should be able to test 
+  You need to update your Ingress manifest to:
+
+1. Use the **current apiVersion** (`networking.k8s.io/v1`).
+2. Update the **host** in both `tls.hosts` and `rules.host` to match your new ngrok domain (`4410-143-105-152-65.ngrok-free.app`).
+3. Update the **backend** format to the new Kubernetes spec (`service.name` and `service.port.number`).
+
+Here’s how your updated file should look:
+
+````yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: greeting-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+spec:
+  tls:
+    - hosts:
+        - 4410-143-105-152-65.ngrok-free.app
+      secretName: echo-tls
+  rules:
+    - host: 4410-143-105-152-65.ngrok-free.app
+      http:
+        paths:
+          - path: /hello
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-service
+                port:
+                  number: 5678
+          - path: /welcome
+            pathType: Prefix
+            backend:
+              service:
+                name: welcome-service
+                port:
+                  number: 5678
+````
+
+**After updating, apply the file:**
+```sh
+kubectl apply -f greeting-ingress-ngrok.yaml
+```
+
+Now you can access your services via:
+- `https://4410-143-105-152-65.ngrok-free.app/hello`
+- `https://4410-143-105-152-65.ngrok-free.app/welcome`
 ---
 
 ## Debugging Steps

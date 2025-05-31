@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: greeting-ingress
@@ -7,13 +7,19 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   rules:
-  - http:
-      paths:
-        - path: /hello
-          backend:
-            serviceName: hello-service
-            servicePort: 5678
-        - path: /welcome
-          backend:
-            serviceName: welcome-service
-            servicePort: 5678
+    - http:
+        paths:
+          - path: /hello
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-service
+                port:
+                  number: 5678
+          - path: /welcome
+            pathType: Prefix
+            backend:
+              service:
+                name: welcome-service
+                port:
+                  number: 5678
