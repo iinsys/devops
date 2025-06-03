@@ -2,11 +2,33 @@ resource "local_file" "pet" {
   filename = var.filename
   content  = "My favorite pet is ${random_pet.my-pet.id}"
   file_permission = "0777"
-  #Life cycle rules
+  # Life cycle rules
   lifecycle {
     create_before_destroy = true
+    # prevent_destroy = true
+    # ignore_changes = [content]
   }
 }
+
+# Example 2: prevent_destroy (uncomment to use)
+# resource "local_file" "pet" {
+#   filename = var.filename
+#   content  = "My favorite pet is ${random_pet.my-pet.id}"
+#   file_permission = "0777"
+#   lifecycle {
+#     prevent_destroy = true
+#   }
+# }
+
+# Example 3: ignore_changes (uncomment to use)
+# resource "local_file" "pet" {
+#   filename = var.filename
+#   content  = "My favorite pet is ${random_pet.my-pet.id}"
+#   file_permission = "0777"
+#   lifecycle {
+#     ignore_changes = [content]
+#   }
+# }
 
 resource "random_pet" "my-pet" {
   prefix    = var.prefix
@@ -14,12 +36,10 @@ resource "random_pet" "my-pet" {
   length    = var.length
 }
 
-##output block
-output content {
-    value       = local_file.pet.content
-    sensitive = false
-    description = "Content of the pet file"
-  
+output "content" {
+  value       = local_file.pet.content
+  sensitive   = false
+  description = "Content of the pet file"
 }
 output "pet-name" {
   value       = random_pet.my-pet.id
