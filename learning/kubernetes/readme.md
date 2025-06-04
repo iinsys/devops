@@ -7,7 +7,7 @@ This guide provides a recommended order for learning Kubernetes as a beginner, w
    Learn about the basic unit of deployment in Kubernetes.
 
 2. **ReplicaSets**  
-   [replicaset/](./replicaset/)  
+   [replicaset/](./replicaset-expl/)  
    Understand how to maintain a stable set of replica Pods.
 
 3. **Deployments**  
@@ -44,7 +44,7 @@ This guide provides a recommended order for learning Kubernetes as a beginner, w
     Ensure a copy of a pod runs on all (or some) nodes.
 
 11. **Horizontal Pod Autoscaler (HPA)**  
-    [hpa/](./hpa/)  
+    [hpa/](./hpa-sb/)  
     Automatically scale your pods based on metrics.
 
 12. **Network Policies**  
