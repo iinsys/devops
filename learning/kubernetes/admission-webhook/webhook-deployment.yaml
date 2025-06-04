@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dummy-webhook
+  template:
+    metadata:
+      labels:
+        app: dummy-webhook
+    spec:
+      containers:
+      - name: webhook
+        image: nginx:alpine
+        ports:
+        - containerPort: 443
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"

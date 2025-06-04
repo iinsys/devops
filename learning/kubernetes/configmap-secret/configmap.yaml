@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  # Simple key-value pairs
+  APP_COLOR: blue
+  APP_MODE: prod
+  
+  # Configuration file
+  config.yaml: |
+    environment: production
+    logging:
+      level: info
+    database:
+      url: mongodb://localhost:27017
