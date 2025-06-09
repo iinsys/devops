@@ -1,5 +1,10 @@
 # Pod Disruption Budgets (PDB)
 
+
+**Definition:**  
+A **Pod Disruption Budget (PDB)** is a Kubernetes policy object that ensures a minimum number of pods in a deployment, stateful set, or replica set remain available during **voluntary disruptions** (e.g., node maintenance, cluster upgrades). PDBs prevent too many pods from being evicted at once, helping maintain application availability.
+
+
 This directory demonstrates how to use PodDisruptionBudgets to ensure high availability during voluntary disruptions.
 
 ## Testing with Minikube
@@ -33,7 +38,7 @@ kubectl describe pdb app-pdb
 6. Test the PDB:
 ```bash
 # Try to drain a node (this simulates maintenance)
-NODE=$(kubectl get nodes | grep -v master | head -n 1 | cut -d' ' -f1)
+NODE=$(kubectl get nodes --no-headers | grep -v control-plane | head -n 1 | awk '{print $1}')
 kubectl drain $NODE --ignore-daemonsets --delete-emptydir-data
 
 # Watch the pods
@@ -46,13 +51,23 @@ kubectl describe pdb app-pdb
 7. Test pod eviction:
 ```bash
 # Try to manually evict pods
-POD=$(kubectl get pod -l app=ha-app -o jsonpath='{.items[0].metadata.name}')
-kubectl evict pod $POD
+kubectl get pod -l app=ha-app -o jsonpath='{.items[0].metadata.name}'
+
+## Delete pod
+kubectl delete pod <hpa-pod>
+
+
 ```
 
 8. Uncordon the node:
 ```bash
+NODE=$(kubectl get nodes --no-headers | grep -v control-plane | awk '{print $1}')
+
+## see node
+echo $NODE
+
 kubectl uncordon $NODE
+
 ```
 
 ## Types of PDB Specifications
