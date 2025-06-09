@@ -43,8 +43,7 @@ kubectl run nginx --image=nginx:alpine
 3. Test the ServiceAccount permissions:
 ```bash
 # Create a pod that uses the ServiceAccount
-kubectl run rbac-test --image=bitnami/kubectl --serviceaccount=pod-reader-account \
-  --command -- sleep infinity
+kubectl apply -f rbac-test.yaml
 
 # Test listing pods (should work)
 kubectl exec -it rbac-test -- kubectl get pods
