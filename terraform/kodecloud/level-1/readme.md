@@ -14,6 +14,7 @@ The Terraform working directory is `/home/bob/terraform`. Create the `main.tf` f
 `Note:` Right-click under the EXPLORER section in VS Code and select Open in `Integrated Terminal` to launch the terminal.
 
 ## Solution
+In this directory we have our file `main.tf` create similar file on kodecloud vs and cp the code and past, run the following commands below
 ```bash
 terraform init
 terraform plan
@@ -22,4 +23,6 @@ terraform apply --auto-approve
  ls -l /home/bob/xfusion-kp.pem 
 -rw------- 1 bob bob 3243 Jun  9 09:38 /home/bob/xfusion-kp.pem
 ```
-`Note`: The provider has already been configured on kodecloud so you don't need to create one
+- This solution also applies the same if the change the name of the key you are supposed to create you just have to modify based on the task discription.
+  
+`Note`: The provider has already been configured on kodecloud so you don't need to create one, you can only create if you want to use this solution for the creation of your key pair on your aws account
