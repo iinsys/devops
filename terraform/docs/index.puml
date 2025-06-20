@@ -1,0 +1,20 @@
+@startuml index
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam backgroundColor #f9f9f9
+title UpCloud Kubernetes Architecture - Index
+
+note as N1
+== 🔗 Architecture Modules ==
+
+1. [[full-architecture.puml]] Full Architecture Overview
+
+2. [[up-infra.puml]] UpCloud Infrastructure  
+3. [[k8s-cluster.puml]] Kubernetes Cluster  
+4. [[network-and-security.puml]] Networking & Security  
+5. [[storage.puml]] Storage  
+6. [[namespaces.puml]] Namespaces
+
+@endnote
+
+@enduml

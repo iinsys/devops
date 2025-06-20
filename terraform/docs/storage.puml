@@ -1,0 +1,13 @@
+@startuml Storage-Architecture
+skinparam componentStyle rectangle
+skinparam shadowing true
+
+package "Storage Stack" {
+    component "Block Storage\nMaxIOPS" as BlockStorage
+    component "CSI Driver" as CSIDriver
+    component "Storage Class\nMaxIOPS / Standard / Archive" as StorageClass
+}
+
+BlockStorage --> CSIDriver
+CSIDriver --> StorageClass
+@enduml

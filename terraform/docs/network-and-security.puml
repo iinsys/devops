@@ -1,0 +1,15 @@
+@startuml Networking-Security
+skinparam componentStyle rectangle
+skinparam shadowing true
+
+package "Networking & Security" {
+    component "Firewall Rules" as Firewall
+    component "DNS Management\nExternalDNS" as DNS
+    component "Ingress Controller\nNGINX" as Ingress
+    component "Cert Manager\nLet's Encrypt" as Cert
+}
+
+Firewall --> Ingress : Protect Access
+DNS --> Ingress : DNS Records
+Cert --> Ingress : SSL Certificates
+@enduml

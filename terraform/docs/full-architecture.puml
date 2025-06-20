@@ -1,0 +1,89 @@
+@startuml full-architecture-clean
+skinparam componentStyle rectangle
+skinparam shadowing true
+skinparam backgroundColor #ffffff
+skinparam defaultTextAlignment center
+title Full Architecture - UpCloud Kubernetes Infrastructure
+
+actor DevOps as "DevOps"
+
+' ========== UpCloud Infrastructure ==========
+package "UpCloud Infrastructure" #CCE4F6 {
+    node "Load Balancer\n(HA)" as LB {
+        component "Floating IP\n(Public Entry)" as FloatingIP
+    }
+
+    node "Router\n(Inter-network Routing)" as Router
+    node "NAT Gateway\n(Egress)" as NAT
+    folder "SDN Private Network\n172.20.1.0/24" as SDN
+}
+
+DevOps --> FloatingIP : External Access
+FloatingIP --> LB
+LB --> SDN
+Router --> NAT
+NAT --> SDN
+
+note right of NAT
+  Handles outbound traffic\nfrom Kubernetes nodes
+end note
+
+' ========== Networking & Security ==========
+package "Networking & Security" #FCE5CD {
+    component "Firewall Rules" as Firewall
+    component "DNS Management\n(ExternalDNS)" as DNS
+    component "Ingress Controller\n(NGINX)" as Ingress
+    component "Cert Manager\n(Let's Encrypt)" as Cert
+}
+
+Firewall --> FloatingIP
+Firewall --> LB
+DNS --> FloatingIP
+Cert --> Ingress
+SDN --> Ingress
+
+' ========== Kubernetes Cluster ==========
+package "Kubernetes Cluster" #D9EAD3 {
+    component "Managed K8s Cluster" as K8s
+    component "Node QWAC\n2 CPU / 4 GB" as NodeQWAC
+    component "Node XS2A\n8 CPU / 16 GB" as NodeXS2A
+    component "Node Sandbox\n16 CPU / 24 GB" as NodeSandbox
+}
+
+Ingress --> K8s
+K8s --> NodeQWAC
+K8s --> NodeXS2A
+K8s --> NodeSandbox
+K8s --> NAT
+
+' ========== Storage ==========
+package "Storage Stack" #EAD1DC {
+    component "Block Storage\nMaxIOPS" as BlockStorage
+    component "CSI Driver" as CSIDriver
+    component "Storage Class\nMaxIOPS / Standard / Archive" as StorageClass
+}
+
+NodeQWAC --> BlockStorage
+NodeXS2A --> BlockStorage
+NodeSandbox --> BlockStorage
+BlockStorage --> CSIDriver
+CSIDriver --> StorageClass
+
+' ========== Namespaces ==========
+package "Namespaces" #E6E6E6 {
+    [xs2a_dev]
+    [xs2a_support]
+    [sandbox_dev]
+    [sandbox_support]
+    [qwac_dev]
+    [sopra]
+}
+
+K8s --> xs2a_dev
+K8s --> xs2a_support
+K8s --> sandbox_dev
+K8s --> sandbox_support
+K8s --> qwac_dev
+K8s --> sopra
+
+@enduml

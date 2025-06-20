@@ -1,0 +1,19 @@
+@startuml Kubernetes-Cluster
+skinparam componentStyle rectangle
+skinparam shadowing true
+
+package "Kubernetes Cluster" {
+    component "Managed K8s Cluster" as K8s
+    component "Node QWAC\n2 CPU / 4 GB" as NodeQWAC
+    component "Node XS2A\n8 CPU / 16 GB" as NodeXS2A
+    component "Node Sandbox\n16 CPU / 24 GB" as NodeSandbox
+}
+
+K8s --> NodeQWAC
+K8s --> NodeXS2A
+K8s --> NodeSandbox
+
+note bottom of K8s
+  Central cluster controlling all nodes
+end note
+@enduml

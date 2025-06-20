@@ -1,0 +1,81 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing true
+
+actor DevOps as "DevOps"
+
+package "UpCloud Infrastructure" {
+    node "Load Balancer\n(HA)" as LB {
+        component "Floating IP\n(Public Entry)" as FloatingIP
+    }
+
+    node "Router\n(Inter-network)" as Router
+    node "NAT Gateway\n(Egress)" as NAT
+
+    folder "Private Network\n172.20.1.0/24" as SDN
+}
+
+package "Kubernetes Cluster" {
+    component "Managed K8s Cluster" as K8s
+    component "Node QWAC\n2 CPU / 4 GB" as NodeQWAC
+    component "Node XS2A\n8 CPU / 16 GB" as NodeXS2A
+    component "Node Sandbox\n16 CPU / 24 GB" as NodeSandbox
+}
+
+package "Storage" {
+    component "Block Storage" as BlockStorage
+    component "CSI Driver" as CSIDriver
+    component "Storage Class" as StorageClass
+}
+
+package "Networking & Security" {
+    component "Firewall Rules" as Firewall
+    component "DNS Management" as DNS
+    component "Ingress Controller\n(NGINX)" as Ingress
+    component "Cert Manager\n(Let's Encrypt)" as Cert
+}
+
+package "Namespaces" {
+    [xs2a_dev]
+    [xs2a_support]
+    [sandbox_dev]
+    [sandbox_support]
+    [qwac_dev]
+    [sopra]
+}
+
+DevOps --> FloatingIP : Access
+FloatingIP --> LB
+LB --> SDN
+SDN --> Ingress
+Ingress --> K8s
+K8s --> NodeQWAC
+K8s --> NodeXS2A
+K8s --> NodeSandbox
+
+Router --> NAT
+NAT --> SDN
+K8s --> NAT
+
+Firewall --> FloatingIP
+Firewall --> LB
+DNS --> FloatingIP
+Cert --> Ingress
+
+NodeQWAC --> BlockStorage
+NodeXS2A --> BlockStorage
+NodeSandbox --> BlockStorage
+BlockStorage --> CSIDriver
+CSIDriver --> StorageClass
+
+K8s --> xs2a_dev
+K8s --> xs2a_support
+K8s --> sandbox_dev
+K8s --> sandbox_support
+K8s --> qwac_dev
+K8s --> sopra
+
+note right of NAT
+  NAT Gateway handles\noutbound traffic
+end note
+@enduml

@@ -1,0 +1,22 @@
+@startuml Kubernetes-Namespaces
+skinparam componentStyle rectangle
+skinparam shadowing true
+
+component "Managed K8s Cluster" as K8s
+
+package "Namespaces" {
+    [xs2a_dev]
+    [xs2a_support]
+    [sandbox_dev]
+    [sandbox_support]
+    [qwac_dev]
+    [sopra]
+}
+
+K8s --> xs2a_dev
+K8s --> xs2a_support
+K8s --> sandbox_dev
+K8s --> sandbox_support
+K8s --> qwac_dev
+K8s --> sopra
+@enduml
