@@ -142,8 +142,11 @@ spec:
 You're just a few clicks away from mastering them:
 
 🎥 [Kubernetes - Services Explained in 15 Minutes! (YouTube - Mumshad)](https://www.youtube.com/watch?si=ay3dYYwQPotkqriB&utm_term=kubernetes_services_explained_in_15_minutes%21&utm_campaign=email_course_kubernetes&utm_medium=email&_hsenc=p2ANqtz-8tME8zJIkKaPzxEmMyb_fG8F5WB0pKa3UJUPPqRK7fUZAoZ-YfCXBAkfAQvqOAtHCr9jcCtKZnYPRz5DyG8RjcAGQZ-UfLD622sP9pZ0rKbq4FTfs&_hsmi=362721068&utm_content=email5&utm_source=hubspot&v=5lzUpDtmWgM&feature=youtu.be) 
+
 📖 [Kubernetes Services Explained - Blog Post](https://kodekloud.com/blog/kubernetes-services/?utm_term=kubernetes_services_explained&utm_campaign=email_course_kubernetes&utm_medium=email&_hsenc=p2ANqtz-81EWDISNeTc9bZJa9WvO8PAKTFFqunu4aLSJwzlytgu44CV5AF-8Tzk1pScVV3hRoSTcdpqZvU34qiw2EkITi4TaCNgtL5nmMNaZ7Ut1jV-QqnRFI&_hsmi=362721068&utm_content=email5&utm_source=hubspot) 
+
 📱 [KodeKloud Notes App — See Services section](https://notes.kodekloud.com/docs/Certified-Kubernetes-Application-Developer-CKAD/Services-Networking/Services?utm_term=see_the_services_section_here&utm_campaign=email_course_kubernetes&utm_medium=email&_hsenc=p2ANqtz-8Daa3GH1djupbh2h9nPGA3wMur0_kWyp1nF6IxN2JNHYBsIzR3iLGX2RpKQ0ouJB4JxRmDNGU9QIlQwhVdpS0ALzUnjrJTisY-a7gZubjbqKo6YhM&_hsmi=362721068&utm_content=email5&utm_source=hubspot)
+
 🧪 [Practice in Free Labs — Kubernetes Services Labs](https://kodekloud.com/free-labs/kubernetes?utm_term=explore_the_kubernetes_services_labs&utm_campaign=email_course_kubernetes&utm_medium=email&_hsenc=p2ANqtz-8ry9FL1ybE7np-EpytW4b_F7EphSh9Z6kfLOBwUB7kP0Mr8IqQytLuvravfYNR2DGGTkTmqyaPOx5yh9TgXCGLtnlgpEpCvdFaIu8Owx1xAcx6wpc&_hsmi=362721068&utm_content=email5&utm_source=hubspot)
 
 ---
