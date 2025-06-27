@@ -1,0 +1,37 @@
+# Default values for bjw-s-app
+image:
+  repository: nginx
+  tag: "1.25"
+  pullPolicy: IfNotPresent
+
+controller:
+  type: deployment
+  enabled: true
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: bjws-app.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+configMaps:
+  my-config:
+    enabled: true
+    data:
+      custom.conf: |
+        # Custom NGINX config or app config can go here
+        welcome: "Hello from bjw-s-app Helm chart!"
+
+resources: {}
+
+# Add more values as needed for testing
