@@ -1,0 +1,1 @@
+All Azure TF configuration examples and templates to reuse
