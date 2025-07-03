@@ -20,7 +20,7 @@ During the migration process, several resources were created under the AWS accou
 `Note:` Right-click under the EXPLORER section in VS Code and select Open in Integrated Terminal to launch the terminal.
 
 ## Solution
-To delete the `EC2 instance` but keep the provisioning code for future use, you can temporarily comment out the resource block in your main.tf file. This allows Terraform to detect the resource as removed and issue a deletion plan.
+Use the commands below to destroy the resource
 ```bash
 terraform plan -destroy  # Confirm Terraform plans to destroy the instance
 
