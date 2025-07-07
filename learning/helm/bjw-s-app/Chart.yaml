@@ -12,9 +12,9 @@ home: https://github.com/bjw-s-labs/helm-charts
 sources:
   - https://github.com/bjw-s-labs/helm-charts
 maintainers:
-  - name: Your Name
-    email: your@email.com
+  - name: Bansikah
+    email: noel@email.com
 dependencies:
-  - name: common
-    version: "4.1.2"
-    repository: "https://bjw-s-labs.github.io/helm-charts/"
+  - name: app-template
+    version: 4.1.2
+    repository: https://bjw-s-labs.github.io/helm-charts

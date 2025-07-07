@@ -1,37 +1,65 @@
-# Default values for bjw-s-app
-image:
-  repository: nginx
-  tag: "1.25"
-  pullPolicy: IfNotPresent
+app-template:
+  global:
+    fullnameOverride: bjws-app
+    labels:
+      app: bjws-app
 
-controller:
-  type: deployment
-  enabled: true
+  controllers:
+    main:
+      enabled: true
+      type: deployment
+      replicas: 1
+      containers:
+        main:
+          image:
+            repository: nginx
+            tag: "1.25"
+            pullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: HTTP
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
 
-service:
-  enabled: true
-  type: ClusterIP
-  port: 80
+  configMaps:
+    my-config:
+      enabled: true
+      data:
+        custom.conf: |
+          # Custom NGINX config
+          welcome: "Hello from bjw-s-app Helm chart!"
 
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations: {}
-  hosts:
-    - host: bjws-app.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
+  service:
+    main:
+      enabled: true
+      controller: main
+      type: ClusterIP
+      ports:
+        http:
+          enabled: true
+          primary: true
+          port: 80
+          targetPort: 80
+          protocol: HTTP
 
-configMaps:
-  my-config:
-    enabled: true
-    data:
-      custom.conf: |
-        # Custom NGINX config or app config can go here
-        welcome: "Hello from bjw-s-app Helm chart!"
-
-resources: {}
-
-# Add more values as needed for testing
+  ingress:
+    main:
+      enabled: true
+      className: nginx
+      annotations: {}
+      hosts:
+        - host: bjws-app.local
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                name: main
+                identifier: main
+                port: http
+      tls: []
