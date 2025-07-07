@@ -18,7 +18,7 @@ app-template:
           ports:
             - name: http
               containerPort: 80
-              protocol: HTTP
+              protocol: TCP
           resources:
             limits:
               cpu: "500m"
@@ -59,7 +59,6 @@ app-template:
             - path: /
               pathType: Prefix
               service:
-                name: main
-                identifier: main
-                port: http
+                name: bjws-app
+                port: 80
       tls: []
