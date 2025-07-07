@@ -41,17 +41,16 @@ kubectl get ingress -l app.kubernetes.io/name=bjws-app
 
 ## 5. Test Ingress (if enabled)
 - Get your Minikube IP (if using Minikube):
-  ```sh
+```sh
   minikube ip
-  ```
+```
 - Add a hosts entry on your machine:
-  ```sh
- echo "$(minikube ip) bjws-app.local" | sudo tee -a /etc/hosts
-  ```
+```sh
+  echo "$(minikube ip) bjws-app.local" | sudo tee -a /etc/hosts
+```
 - Test access in your browser or with curl:
-  ```sh
   curl http://bjws-app.local/
-  ```
+
 
 ## 6. Uninstall the Chart
 ```sh
