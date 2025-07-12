@@ -46,7 +46,7 @@ The status each kubernetes component is been stored or held by the `etcd`
 - They are used to describe Kubernetes objects
 - They are written in a format that is easy for humans to read and write
 - They are typically named with a `.yaml` or `.yml` extension
-- Strict on indentation, use yaml validator
+- Strict on indentation, use [YAML Linter](https://yaml-linter.vercel.app/) for validation
 
 ### Blue print for pods
 **Layers of Abstraction
