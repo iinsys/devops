@@ -1,0 +1,63 @@
+---
+- name: Setup Apache, PHP and WordPress config on app servers
+  hosts: app_servers
+  become: yes
+  vars:
+    apache_port: 6100
+    db_host: stdb01.stratos.xfusioncorp.com
+    db_name: kodekloud_db1
+    db_user: kodekloud_joy
+    db_password: dCV3szSGNA
+
+  tasks:
+    - name: Install httpd, php, and dependencies
+      yum:
+        name:
+          - httpd
+          - php
+          - php-mysqlnd
+          - php-fpm
+          - php-gd
+          - php-xml
+          - php-mbstring
+          - php-json
+        state: present
+
+    - name: Configure Apache to listen on port {{ apache_port }}
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        line: "Listen {{ apache_port }}"
+
+    - name: Restart Apache to apply port change
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+
+    - name: Deploy WordPress wp-config.php with DB credentials
+      copy:
+        dest: /var/www/html/wp-config.php
+        content: |
+          <?php
+          define( 'DB_NAME', '{{ db_name }}' );
+          define( 'DB_USER', '{{ db_user }}' );
+          define( 'DB_PASSWORD', '{{ db_password }}' );
+          define( 'DB_HOST', '{{ db_host }}' );
+          define( 'DB_CHARSET', 'utf8' );
+          define( 'DB_COLLATE', '' );
+          $table_prefix = 'wp_';
+          define( 'WP_DEBUG', false );
+          if ( !defined( 'ABSPATH' ) ) {
+              define( 'ABSPATH', __DIR__ . '/' );
+          }
+          require_once ABSPATH . 'wp-settings.php';
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Ensure Apache service is running and enabled
+      service:
+        name: httpd
+        state: started
+        enabled: yes

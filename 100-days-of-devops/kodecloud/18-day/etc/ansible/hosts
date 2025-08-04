@@ -1,0 +1,10 @@
+[app_servers]
+stapp01.stratos.xfusioncorp.com ansible_user=tony ansible_password=Ir0nM@n ansible_become_password=Ir0nM@n
+stapp02.stratos.xfusioncorp.com ansible_user=steve ansible_password=Am3ric@ ansible_become_password=Am3ric@
+stapp03.stratos.xfusioncorp.com ansible_user=banner ansible_password=BigGr33n ansible_become_password=BigGr33n
+
+[db_server]
+stdb01.stratos.xfusioncorp.com ansible_user=peter ansible_password=Sp!dy ansible_become_password=Sp!dy
+
+[lb_server]
+stlb01.stratos.xfusioncorp.com ansible_user=loki ansible_password=Mischi3f ansible_become_password=Mischi3f
