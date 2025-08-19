@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$1" == refs/heads/master ];
+then
+  echo "creating release tag"
+  git tag release- `date '+%Y-%m-%d'` master
+fi
