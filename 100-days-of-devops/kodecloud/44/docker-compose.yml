@@ -1,0 +1,9 @@
+#version: '3'
+services:
+  webserver:
+    image: httpd:latest
+    container_name: httpd
+    ports:
+      - "8082:80"
+    volumes:
+      - /opt/itadmin:/usr/local/apache2/htdocs
