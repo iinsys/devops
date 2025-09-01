@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: php_host
+    image: php:apache
+    ports:
+      - "3004:80"
+    volumes:
+      - /var/www/html:/var/www/html
+ 
+
+  db:
+    container_name: mysql_host
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: RootPass123!
+      MYSQL_DATABASE: database_host
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: Str0ngP@ssw0rd
