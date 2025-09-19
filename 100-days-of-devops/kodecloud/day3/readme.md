@@ -1,15 +1,10 @@
-Day 3: Secure Root SSH Access
+Day 3: Disable Direct SSH Root Login on All App Servers
 
 >You are exactly where you need to be. You are not behind.
 
-# 🚀 DevOps Journey with KodeCloud – Day 3  
-## ✅ Task: Disable Direct SSH Root Login on All App Servers
-
 Following a security audit, the xFusionCorp security team has enforced a new protocol: **root should not be allowed to log in via SSH directly**. You are to **disable root SSH login** on all app servers in the **Stratos Datacenter**.
 
----
-
-## 🔧 Affected Servers
+## Affected Servers
 
 | Server   | Hostname                     | User    |
 |----------|------------------------------|---------|
@@ -17,10 +12,9 @@ Following a security audit, the xFusionCorp security team has enforced a new pro
 | stapp02  | stapp02.stratos.xfusioncorp.com | steve   |
 | stapp03  | stapp03.stratos.xfusioncorp.com | banner  |
 
----
+`Note:` The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
-## 🛠️ Step-by-Step Commands for Each App Server
-
+## Solution
 ```bash
 # ========= [ 1. Connect to the jump host ] =========
 ssh thor@jump_host
@@ -67,9 +61,7 @@ sudo systemctl restart sshd
 exit
 ```
 
----
-
-## ✅ Verification (Optional)
+## Verification
 
 On each app server, you can verify the setting with:
 
@@ -88,7 +80,3 @@ And ensure the SSH daemon is running:
 ```bash
 sudo systemctl status sshd
 ```
-
----
-
-✅ **Result**: Root login via SSH has been disabled on **stapp01**, **stapp02**, and **stapp03** as required by the security policy.

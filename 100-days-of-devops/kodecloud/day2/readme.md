@@ -1,9 +1,4 @@
-2. Day 2: Temporary User Setup with Expiry
-
-
-
-# 🚀 DevOps Journey with KodeCloud – Day 2  
-## ✅ Task: Create a Temporary User Account with an Expiry Date
+Day 2: Create a Temporary User Account with an Expiry Date
 
 >I can and I will. Watch me.
 >
@@ -11,11 +6,9 @@
 
 As part of a temporary assignment to the Nautilus project, a developer named `siva` needs access to **App Server 2** in the **Stratos Datacenter**, but **only until 2024-03-28**.
 
----
+`Note:` The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
 ## Solution
-### 🛠️ Step-by-Step Commands to Complete the Task
-
 ```bash
 # 1. Connect to App Server 2 from the jump host
 ssh steve@stapp02
@@ -31,9 +24,7 @@ sudo useradd -e 2024-03-28 siva
 sudo chage -l siva
 ```
 
----
-
-### 🧪 Expected Output from Verification Step (`chage -l siva`)
+## Expected Output from Verification Step
 
 ```
 Last password change                                    : <some date>
@@ -48,7 +39,3 @@ Number of days of warning before password expires       : 7
 This confirms that:
 - The user `siva` exists.
 - The account will expire on **March 28, 2024**, after which login will be disabled automatically.
-
----
-
-✅ **Result**: Task successfully completed — user `siva` created with expiry date set to **2024-03-28** on **App Server 2**.

@@ -1,20 +1,20 @@
+Day 8: Install Ansible 4.10.0 on the Jump Host using pip3
+
 >The beautiful thing about learning is that nobody can take it away from you.
 
-🚀 DevOps Journey – Day 8  
-Task: Install Ansible 4.10.0 on the Jump Host using pip3 and make it globally available.
-
-✅ Task Description  
 During the weekly meeting, the Nautilus DevOps team discussed automation and configuration management tools. They decided to use **Ansible** due to its simple setup and minimal prerequisites. For initial testing, the **Jump Host** will be used as the Ansible control node.
 
-🛠️ Objective  
 Install **Ansible v4.10.0** using **pip3** on the **Jump Host**, and make sure it's available **globally** (all users can run it).
 
-🌐 Infrastructure Overview  
-Server       | Hostname                         | User | Purpose  
------------- | -------------------------------- | ---- | -------  
-Jump Host    | jump_host.stratos.xfusioncorp.com | thor | Ansible Controller  
+## Infrastructure Overview  
 
-📦 One-Block Script to Install Ansible Globally Using pip3
+| Server       | Hostname                         | User | Purpose              |
+|--------------|----------------------------------|------|----------------------|
+| Jump Host    | jump_host.stratos.xfusioncorp.com | thor | Ansible Controller   |
+
+`Note:` The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
+
+## Solution
 ```bash
 # ========= [ 1. SSH into the Jump Host as thor ] =========
 ssh thor@jump_host
@@ -46,4 +46,4 @@ ansible --version
 #   python version = 3.9.18 (main, Jan 24 2024, 00:00:00) [GCC 11.4.1 20231218 (Red Hat 11.4.1-3)]
 #   jinja version = 3.1.6
 #   libyaml = True
-
+```

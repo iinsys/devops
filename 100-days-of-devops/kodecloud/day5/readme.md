@@ -1,9 +1,8 @@
->Hard work beats talent when talent doesn’t work hard.
+Day 5: Install and Permanently Disable SELinux (App Server 1)
+
+>Hard work beats talent when talent doesn't work hard.
 >
 >– Tim Notke
-
-# 🚀 DevOps Journey with KodeCloud – Day 5  
-## ✅ Task: Install and Permanently Disable SELinux (App Server 1)
 
 The xFusionCorp Industries security team is preparing to enhance security using **SELinux**. As part of this initiative, the following actions must be completed on **App Server 1**:
 
@@ -12,24 +11,19 @@ The xFusionCorp Industries security team is preparing to enhance security using 
 - A reboot is already scheduled — no need to perform it now.
 - The current runtime SELinux status can be ignored.
 
----
-
-## 🖥️ Target Server
+## Target Server
 
 | Server   | Hostname                     | User  |
 |----------|------------------------------|-------|
 | stapp01  | stapp01.stratos.xfusioncorp.com | tony  |
 
----
-
-## 📦 Official Red Hat Documentation References
+## Official Red Hat Documentation References
 - SELinux config: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/security_hardening/assembly_using-selinux-configuration-security-hardening
 - SELinux package group: https://access.redhat.com/solutions/36278
 
----
+`Note:` The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
-## 🛠️ Step-by-Step Commands
-
+## Solution
 ```bash
 # ========= [ 1. Connect to the jump host ] =========
 ssh thor@jump_host
@@ -65,18 +59,8 @@ grep SELINUX= /etc/selinux/config
 # Reboot is planned and will apply the change. No need to reboot now.
 ```
 
----
+## Expected Outcome After Reboot
 
-## ✅ Expected Outcome After Reboot
-
-Once the server reboots, SELinux will be **permanently disabled**, as configured in:
-
-```
-/etc/selinux/config
-```
+Once the server reboots, SELinux will be **permanently disabled**, as configured in `/etc/selinux/config`.
 
 Even though the current runtime output of `sestatus` may show it as enabled, that can be ignored per instruction.
-
----
-
-✅ **Result**: SELinux packages installed, and permanent disabling is in place. Configuration will take effect after the planned reboot.

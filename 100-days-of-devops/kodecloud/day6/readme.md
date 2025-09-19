@@ -1,10 +1,8 @@
+Day 6: Install cronie and Set Up Sample Cron Job
 
 >If you really look closely, most overnight successes took a long time.
 >
 >– Steve Jobs
-
-# 🚀 DevOps Journey with KodeCloud – Day 6  
-## ✅ Task: Install `cronie` and Set Up Sample Cron Job
 
 The Nautilus team wants to verify automated task execution using cron before deploying production scripts. As part of this test:
 
@@ -12,15 +10,11 @@ The Nautilus team wants to verify automated task execution using cron before dep
 - Start and enable the **crond** service.
 - Create a cron job for the **root user** that runs every 5 minutes and writes `hello` to `/tmp/cron_text`.
 
----
-
-## 📦 Official Documentation Reference
+## Official Documentation Reference
 - https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/configuring_basic_system_settings/assembly_configuring-and-maintaining-system-time_configuring-basic-system-settings#proc_installing-the-cronie-package_configuring-and-maintaining-system-time
 - https://man7.org/linux/man-pages/man8/crond.8.html
 
----
-
-## 🖥️ Target Servers
+## Target Servers
 
 | Hostname | Username | Password  |
 |----------|----------|-----------|
@@ -30,11 +24,11 @@ The Nautilus team wants to verify automated task execution using cron before dep
 
 The passwords come from the [official documentations](https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus#infrastructure-details) it might change in the feature so always make sure to look at the documentation first
 
----
+`Note:` The `kubectl` utility on `jump_host` has been configured to work with the kubernetes cluster.
 
-## 🛠️ Step-by-Step Instructions
+## Solution
 
-### 🔁 Repeat these steps for each App Server
+### Repeat these steps for each App Server
 
 ```bash
 # ========= [ 1. SSH into the jump host ] =========
@@ -62,9 +56,8 @@ sudo crontab -l
 # Output should show: */5 * * * * echo hello > /tmp/cron_text
 ```
 
----
+## Result
 
-✅ **Result**:  
 - Cron is installed and running.  
 - Every 5 minutes, `hello` will be written to `/tmp/cron_text` by the root user on all 3 app servers.
 
@@ -72,7 +65,3 @@ To validate later:
 ```bash
 cat /tmp/cron_text
 ```
-
----
-
-Let me know when you're ready for **Day 7** or want a combined PDF of all tasks so far!
