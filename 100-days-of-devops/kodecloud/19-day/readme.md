@@ -85,6 +85,6 @@ sudo systemctl enable httpd
 curl http://localhost:6400/news/
 curl http://localhost:6400/demo/
 
-# ✅ Both should display the HTML content of the respective static sites.
+#  Both should display the HTML content of the respective static sites.
 
 ```
