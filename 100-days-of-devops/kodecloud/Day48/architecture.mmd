@@ -1,0 +1,57 @@
+flowchart TD
+  subgraph Control Plane
+    APIServer["API Server"]
+    Scheduler["Scheduler"]
+    ControllerManager["Controller Manager"]
+    etcd["etcd (Key-Value Store)"]
+  end
+
+  subgraph Node1["Worker Node 1"]
+    Kubelet1["Kubelet"]
+    KubeProxy1["Kube Proxy"]
+    Pod1A["Pod A"]
+    Pod1B["Pod B"]
+  end
+
+  subgraph Node2["Worker Node 2"]
+    Kubelet2["Kubelet"]
+    KubeProxy2["Kube Proxy"]
+    Pod2A["Pod C"]
+    Pod2B["Pod D"]
+  end
+
+  subgraph Addons
+    DNS["CoreDNS"]
+    Dashboard["Kubernetes Dashboard"]
+    Ingress["Ingress Controller"]
+  end
+
+  User["User (kubectl/Client)"] --> APIServer
+  APIServer <--> etcd
+  APIServer --> Scheduler
+  APIServer --> ControllerManager
+  APIServer --> Kubelet1
+  APIServer --> Kubelet2
+
+  Scheduler --> Kubelet1
+  Scheduler --> Kubelet2
+
+  ControllerManager --> Kubelet1
+  ControllerManager --> Kubelet2
+
+  Kubelet1 --> Pod1A
+  Kubelet1 --> Pod1B
+  Kubelet2 --> Pod2A
+  Kubelet2 --> Pod2B
+
+  Kubelet1 --> KubeProxy1
+  Kubelet2 --> KubeProxy2
+
+  KubeProxy1 --> Pod1A
+  KubeProxy1 --> Pod1B
+  KubeProxy2 --> Pod2A
+  KubeProxy2 --> Pod2B
+
+  APIServer --> DNS
+  APIServer --> Dashboard
+  APIServer --> Ingress

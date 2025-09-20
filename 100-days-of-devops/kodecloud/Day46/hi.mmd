@@ -1,0 +1,8 @@
+graph TD
+    A[Client] -->|CLI / REST API| B[Docker Daemon]
+    B --> C[Containerd]
+    C --> D[Containers]
+    B --> E[Docker Images]
+    E --> F[Docker Registry]
+    B --> G[Network]
+    B --> H[Volumes]

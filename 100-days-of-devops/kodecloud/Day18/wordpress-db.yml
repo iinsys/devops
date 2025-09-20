@@ -1,0 +1,44 @@
+---
+- name: Setup MariaDB and WordPress Database on DB Server
+  hosts: db_server
+  become: yes
+  vars:
+    db_name: kodekloud_db1
+    db_user: kodekloud_joy
+    db_password: dCV3szSGNA
+    mysql_socket: /var/lib/mysql/mysql.sock
+
+  tasks:
+    - name: Install MariaDB server and python3-pymysql
+      yum:
+        name:
+          - mariadb-server
+          - python3-PyMySQL
+        state: present
+
+    - name: Start and enable MariaDB service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Wait for MariaDB socket to be ready
+      wait_for:
+        path: "{{ mysql_socket }}"
+        state: started
+        timeout: 30
+
+    - name: Create WordPress database
+      community.mysql.mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_unix_socket: "{{ mysql_socket }}"
+
+    - name: Create WordPress DB user with all privileges on DB
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        host: '%'
+        state: present
+        login_unix_socket: "{{ mysql_socket }}"
