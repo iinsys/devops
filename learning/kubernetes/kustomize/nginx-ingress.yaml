@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Optional: Enable HTTPS redirection
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  rules:
+    - host: nginx.example.com   # Replace with your real domain (DNS must point to LB IP)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service
+                port:
+                  number: 80
+
+  # TLS configuration (commented out for now)
+  # tls:
+  #   - hosts:
+  #       - nginx.example.com
+  #     secretName: nginx-tls-secret
+  #
+  # To enable TLS:
+  # 1. Point your domain (nginx.example.com) to the LoadBalancer created by the Ingress Controller.
+  # 2. Create a TLS secret:
+  #    kubectl create secret tls nginx-tls-secret \
+  #      --cert=path/to/tls.crt \
+  #      --key=path/to/tls.key
+  # 3. Uncomment the tls section above.
+  #
+  # 🔑 Alternatively, if using cert-manager + Let's Encrypt, add these annotations:
+  #   cert-manager.io/cluster-issuer: "letsencrypt-prod"
