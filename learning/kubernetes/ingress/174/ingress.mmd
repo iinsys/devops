@@ -1,0 +1,21 @@
+flowchart TD
+    A[User Browser] -->|DNS: frontend.example.com| B[Cloud LoadBalancer]
+    A2[User Browser] -->|DNS: api.example.com| B
+    A3[User Browser] -->|DNS: grafana.example.com| B
+
+    B --> C["Ingress Controller (Nginx / Traefik / ALB)"]
+
+    %% Ingress resources
+    C --> D["Ingress: frontend-ingress"]
+    C --> E["Ingress: api-ingress"]
+    C --> F["Ingress: grafana-ingress"]
+
+    %% Backend services
+    D --> G[ClusterIP Service: frontend-service]
+    E --> H[ClusterIP Service: api-service]
+    F --> I[ClusterIP Service: grafana-service]
+
+    %% Pods
+    G --> J[Frontend Pods]
+    H --> K[API Pods]
+    I --> L[Grafana Pods]
