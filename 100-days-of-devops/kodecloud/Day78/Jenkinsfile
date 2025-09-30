@@ -1,0 +1,34 @@
+pipeline {
+    agent {
+        label 'ststor01'
+    }
+    
+    parameters {
+        string(name: 'BRANCH', defaultValue: 'master', description: 'Branch to deploy (master or feature)')
+    }
+    
+    stages {
+        stage('Deploy') {
+            when {
+                expression {
+                    params.BRANCH == 'master' || params.BRANCH == 'feature'
+                }
+            }
+            steps {
+                script {
+                    def repositoryPath = '/var/www/html/'
+
+                    if (params.BRANCH == 'master') {
+                        git branch: 'master',
+                            url: 'http://git.stratos.xfusioncorp.com/sarah/web_app.git'
+                    } else if (params.BRANCH == 'feature') {
+                        git branch: 'feature',
+                            url: 'http://git.stratos.xfusioncorp.com/sarah/web_app.git'
+                    }
+                    
+                    sh "cp -r /var/www/html/workspace/xfusion-webapp-job/* /var/www/html/"
+            }
+                }
+            }
+        }
+    }
