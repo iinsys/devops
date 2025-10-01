@@ -4,7 +4,9 @@ The Nautilus DevOps team is strategizing the migration of a portion of their inf
 
 For this task, allocate an `Elastic IP` address named `nautilus-eip` using `Terraform`.
 
-The Terraform working directory is `/home/bob/terraform`. Create the `main.tf` file (`do not` create a different `.tf` file) to accomplish this task.
+The Terraform working directory is `/home/bob/terraform`.
+
+Create the `main.tf` file (`do not` create a different `.tf` file) to accomplish this task.
 
 `Note:` `Right-click` under the `EXPLORER` section in `VS Code` and select `Open in Integrated Terminal` to launch the terminal.
 
