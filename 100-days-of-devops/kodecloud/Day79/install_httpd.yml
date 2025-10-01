@@ -1,0 +1,21 @@
+---
+- name: Install and configure httpd on all app servers
+  hosts: appservers
+  become: yes
+  tasks:
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: present
+
+    - name: Change port from 80 to 8080 in httpd.conf
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        line: 'Listen 8080'
+
+    - name: Restart httpd service
+      systemd:
+        name: httpd
+        state: restarted
+        enabled: yes

@@ -1,0 +1,2 @@
+sshpass -p 'your_password_here' scp -o StrictHostKeyChecking=no index.html natasha@ststor01:/var/www/html
+// not recommended for good practice but quick solution
