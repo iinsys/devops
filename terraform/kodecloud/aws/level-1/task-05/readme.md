@@ -10,8 +10,10 @@ The Terraform working directory is `/home/bob/terraform`. Create the `main.tf` f
 ## Solution
 ```bash
 terraform init
+
 terraform plan
-terraform apply
+
+terraform apply // type yes to accept the creation of the resource
 ```
 **✅ Explanation**
 - `assign_generated_ipv6_cidr_block = true:` Tells AWS to assign an Amazon-provided IPv6 CIDR block.
