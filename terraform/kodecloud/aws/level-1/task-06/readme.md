@@ -9,7 +9,11 @@ The Terraform working directory is `/home/bob/terraform`. Create the `main.tf` f
 `Note:` `Right-click` under the `EXPLORER` section in `VS Code` and select `Open in Integrated Terminal` to launch the terminal.
 
 ```bash
+terraform init
 
+terraform plan
+
+terraform apply --auto-approve
 ```
 **🔧 Resource: aws_eip.nautilus_eip**
 - Type: `Elastic IP (EIP)`
