@@ -1,39 +1,16 @@
 **Day 80: Jenkins Chained Builds**
 
->The only thing standing between you and outrageous succe**Step 1: Enable passwordless sudo in all app servers (CRITICAL)**
-```bash
-# SSH to each app server and run:
-# stapp01 (tony):
-sudo visudo
-# Add at the end: tony ALL=(ALL) NOPASSWD: ALL
+>Practice as if you are the worst, Perform as if you are the best.
 
-# stapp02 (steve):
-sudo visudo  
-# Add at the end: steve ALL=(ALL) NOPASSWD: ALL
-
-# stapp03 (banner):
-sudo visudo
-# Add at the end: banner ALL=(ALL) NOPASSWD: ALL
-```
-
-**Step 2: Install Required Jenkins Plugins**
-- Jenkins UI → Manage Jenkins → Manage Plugins → Available
-- Install and restart Jenkins after each group:
-  - **Git plugin**
-  - **SSH plugin** 
-  - **Publish Over SSH plugin**
-  - **Build Authorization Token Root** (optional, for webhooks)ontinuous progress.
->
+>The only thing standing between you and outrageous success is continuous progress.
 >– Dan Waldschmidt
 
 The DevOps team was looking for a solution where they want to **restart Apache service on all app servers** if the deployment goes fine on these servers in Stratos Datacenter. After having a discussion, they came up with a solution to use **Jenkins chained builds** so that they can use a **downstream job** for services which should only be triggered by the **deployment job**. So as per the requirements mentioned below configure the required Jenkins jobs.
 
-
-
 Click on the Jenkins button on the top bar to access the Jenkins UI. Login using **username admin** and **password Adm!n321**.
 
 
-Similarly you can access **Gitea UI** on **port 8090** and username and password for Git is **sarah** and **Sarah_pass123** respectively. Under user sarah you will find a repository named **web**.
+Similarly you can access **Gitea UI** with username and password for Git is **sarah** and **Sarah_pass123** respectively. Under user sarah you will find a repository named **web**.
 
 
 Apache is already installed and configured on all app server so no changes are needed there. The doc root **/var/www/html** on all these app servers is shared among the **Storage server** under **/var/www/html** directory.
@@ -70,29 +47,13 @@ Note:
 ## Solution
 
 ### Step 0: Automated sudo setup (optional - use Ansible)
-```yaml
-# ansible-passwordless-sudo.yml
----
-- name: Configure passwordless sudo for Jenkins operations
-  hosts: app_servers
-  gather_facts: no
-  vars:
-    app_users:
-      - { host: "172.16.238.10", user: "tony", password: "Ir0nM@n" }
-      - { host: "172.16.238.11", user: "steve", password: "Am3ric@" }
-      - { host: "172.16.238.12", user: "banner", password: "BigGr33n" }
-  
-  tasks:
-    - name: Add passwordless sudo for app server users
-      lineinfile:
-        path: /etc/sudoers.d/jenkins-users
-        line: "{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL"
-        create: yes
-        mode: '0440'
-        validate: 'visudo -cf %s'
-      become: yes
+```bash
+## install ansible on jump host
+chmod +x install.sh
+./install.sh
 
-# Run with: ansible-playbook -i inventory ansible-passwordless-sudo.yml
+# set sudo with ansible you can find files in this directory 
+ansible-playbook -i inventory.ini ansible-passwordless-sudo.yml
 ```
 
 ### Manual Steps (Proven Working Solution)
