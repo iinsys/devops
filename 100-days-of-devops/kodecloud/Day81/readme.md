@@ -78,7 +78,7 @@ For these kind of scenarios requiring changes to be done in a web UI, please tak
 # 5. Change content to: "Welcome to xFusionCorp Industries"
 # 6. Commit changes with message: "Update welcome message"
 
-# Method 2: Via SSH to storage server(Recommended)
+# Method 2: Via SSH to storage server
 ssh natasha@ststor01
 cd /var/www/html
 echo "Welcome to xFusionCorp Industries" | sudo tee index.html
