@@ -26,10 +26,10 @@ pipeline {
                         echo "DEBUG: Local index.html content:"
                         cat index.html || echo "No index.html found locally"
                         
-                        # Create correct content if needed
-                        echo "Welcome to xFusionCorp Industries" > index.html
-                        echo "DEBUG: Updated local index.html content:"
-                        cat index.html
+                        # Create correct content if needed (uncomment if repository content is wrong)
+                        # echo "Welcome to xFusionCorp Industries" > index.html
+                        # echo "DEBUG: Updated local index.html content:"
+                        # cat index.html
                         
                         # Transfer files
                         sshpass -p "Bl@kW" scp -o StrictHostKeyChecking=no -r index.html natasha@ststor01:/var/www/html/

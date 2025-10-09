@@ -47,24 +47,35 @@ For these kind of scenarios requiring changes to be done in a web UI, please tak
 
 ### Step-by-Step Implementation:
 
-**Step 1: Install Required Jenkins Plugins**
+**Step 1: Update and Install Required Jenkins Plugins**
 ```bash
-# Jenkins UI → Manage Jenkins → Manage Plugins → Available
-# Search and install (then restart Jenkins):
+# Go to Dashboard > Manage Jenkins > Plugins > Available
+# First, update all existing plugins:
+# - Check "Select All" > Hit "Update" Button
+# - Wait for updates to complete
+
+# Install required plugins:
+# Search and install these plugins (then restart Jenkins):
 # - Git plugin (usually pre-installed)
-# - Pipeline plugin (usually pre-installed)  
-# 
-# Note: The updated script doesn't require SSH Pipeline Steps plugin
+# - SSH plugin  
+# - SSH Agent plugin
+# - SSH Build Agents plugin
+# - Pipeline plugin (usually pre-installed)
+# - SSH Pipeline Steps plugin
+
 # Check "Restart Jenkins when installation is complete and no jobs running"
+# Note: Jenkins UI may get stuck during restart - refresh page if needed
 ```
 
-**Step 2: Prepare Jenkins Environment (Optional)**
+**Step 2: Prepare Jenkins Environment**
 ```bash
-# If sshpass is not available on Jenkins server, install it:
-# This step might be needed for SCP fallback method
-# Connect to Jenkins server as root and run:
-# yum install sshpass -y   # RHEL/CentOS
-# apt install sshpass -y   # Ubuntu/Debian
+# Connect to Jenkins server and install sshpass if not available(Optional):
+ssh jenkins@jenkins    # Password: j@rv!s
+sshpass -V             # Check if sshpass is installed
+sudo yum install sshpass -y    # RHEL/CentOS
+# OR
+sudo apt install sshpass -y    # Ubuntu/Debian
+exit
 ```
 
 **Step 3: Update Repository Content First**
@@ -79,12 +90,18 @@ For these kind of scenarios requiring changes to be done in a web UI, please tak
 # 6. Commit changes with message: "Update welcome message"
 
 # Method 2: Via SSH to storage server
-ssh natasha@ststor01
+ssh natasha@ststor01   # Password: Bl@kW
+sudo chown natasha:natasha /var/www/html/index.html
+sudo chmod 755 /var/www/html/index.html
 cd /var/www/html
 echo "Welcome to xFusionCorp Industries" | sudo tee index.html
-sudo chown natasha:natasha index.html
-sudo chmod 644 index.html
-# Note: Git operations in shared storage may conflict with Jenkins deployment
+sudo chown natasha:natasha index.html  
+sudo chmod 755 index.html
+git add index.html
+git commit -m "Update welcome message"
+git push origin master
+# Username: sarah
+# Password: Sarah_pass123
 ```
 
 **Step 4: Create Pipeline Job**
@@ -124,11 +141,6 @@ pipeline {
                         # First, verify what content we have locally
                         echo "DEBUG: Local index.html content:"
                         cat index.html || echo "No index.html found locally"
-                        
-                        # Create correct content if needed
-                        echo "Welcome to xFusionCorp Industries" > index.html
-                        echo "DEBUG: Updated local index.html content:"
-                        cat index.html
                         
                         # Transfer files
                         sshpass -p "Bl@kW" scp -o StrictHostKeyChecking=no -r index.html natasha@ststor01:/var/www/html/
@@ -215,24 +227,42 @@ pipeline {
 # 7. Verify content shows "Welcome to xFusionCorp Industries"
 ```
 
-### Troubleshooting Tips:
+### Troubleshooting Tips - Common Issues and Solutions:
+
 ```bash
-# Common Issues:
-# 1. Git authentication failure: Check GIT_CREDS credentials
-# 2. SSH Pipeline Steps plugin missing: Install and restart Jenkins  
-# 3. SSH connection failure: Verify natasha/Bl@kW credentials
-# 4. Apache not responding: Check if httpd is running on port 8080
-# 5. Content not updated: Verify deployment copied files correctly
-# 6. Test stage fails: Check if content exactly matches "Welcome to xFusionCorp Industries"
+# Common Issues and Solutions:
+# 1. Git authentication failure: Verify repository URL and credentials
+# 2. Missing SSH Pipeline Steps plugin: Install and restart Jenkins if needed  
+# 3. SSH connection failure: Check SSH credentials (natasha/Bl@kW) and connection settings
+# 4. Apache not responding: Ensure httpd is running and listening on port 8080
+# 5. Content not updated: Verify deployment copied all files to the correct location
+# 6. Test stage fails: Ensure deployed content exactly matches expected output
+# 7. Strict output check: Must be case-sensitive with no extra whitespace — "Welcome to xFusionCorp Industries"
 
-# Manual Validation:
-curl -I http://stlb01:8091                    # Check HTTP status
-curl http://stlb01:8091                       # Check content
-curl http://stapp01:8080                      # Test app server 1
-curl http://stapp02:8080                      # Test app server 2  
-curl http://stapp03:8080                      # Test app server 3
+# Manual Commands for Verification:
+curl -I http://stlb01:8091        # Check HTTP response headers from load balancer
+curl http://stlb01:8091           # Retrieve and inspect content served by load balancer
 
-# Verify deployment:
-ssh natasha@ststor01 "ls -la /var/www/html/"
-ssh natasha@ststor01 "cat /var/www/html/index.html"
+# Test connectivity and content from individual application servers:
+curl http://stapp01:8080          # App Server 1
+curl http://stapp02:8080          # App Server 2  
+curl http://stapp03:8080          # App Server 3
+
+# Verify deployment on storage server:
+ssh natasha@ststor01              # Password: Bl@kW
+ls -la /var/www/html/
+cat /var/www/html/index.html
+```
+
+### Key Success Indicators:
+
+```bash
+# Pipeline Success Criteria:
+# Deploy Stage: Git clone successful, SSH file transfer completed, correct file permissions set
+# Test Stage: Load balancer functionality test passed, application servers respond correctly
+#  Content Verification: http://stlb01:8091 displays exactly "Welcome to xFusionCorp Industries"
+#  No sub-directories in URL (not http://stlb01:8091/web)
+
+# Final Validation:
+# Access http://stlb01:8091 and verify page displays: "Welcome to xFusionCorp Industries"
 ```
