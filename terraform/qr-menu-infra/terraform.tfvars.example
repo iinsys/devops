@@ -1,0 +1,32 @@
+# QR Menu Infrastructure - Terraform Variables (TESTING CONFIGURATION)
+# Copy this file to terraform.tfvars and update values
+# NOTE: This is optimized for testing/demo - minimal costs
+
+# AWS Configuration
+aws_region = "us-east-1"  # Change to your preferred region
+
+# Project Configuration
+project_name = "qr-menu-test"  # Added -test suffix
+environment  = "testing"       # Changed from production to testing
+
+# EC2 Configuration (Cost-Optimized for Testing)
+instance_type     = "t3.small"    # Cheaper option: 2 vCPU, 2GB RAM (~$15/month)
+root_volume_size  = 10             # Reduced storage: 10GB (sufficient for testing)
+
+# SSH Key Configuration
+key_name           = "qr-menu-key"
+create_private_key = true          # Set to false if using existing key
+# public_key_path  = "qr-menu-key.pub"  # Only needed if create_private_key = false
+
+# Security Configuration
+allowed_ssh_cidr = "0.0.0.0/0"     # Set to "YOUR_IP/32" for better security
+
+# Application Configuration
+domain_name = "qrmenu.yourdomain.com"  # Your actual domain
+
+# Database Configuration
+db_password = "your-secure-db-password-here"  # Use a strong password!
+
+# Monitoring Configuration (Cost-Optimized)
+log_retention_days = 1             # Minimal log retention for testing
+enable_monitoring  = false         # Disable detailed monitoring to save cost
