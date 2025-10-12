@@ -136,8 +136,7 @@ sudo visudo
   - **SSH Site 3:** banner@stapp03:22
   - **Command for all:**
 ```bash
-sudo systemctl restart httpd
-sudo systemctl status httpd
+sudo systemctl restart httpd && sudo systemctl status httpd --no-pager
 ```
 
 **Step 8: Link Jobs (Post-build Action)**
