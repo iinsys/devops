@@ -85,5 +85,5 @@ curl http://localhost:8093/index.php
 # From Jump Host:
 curl http://stapp02:8093/index.php
 
-# ✅ You should see the PHP info page displayed confirming the setup works.
+#  You should see the PHP info page displayed confirming the setup works.
 ```
