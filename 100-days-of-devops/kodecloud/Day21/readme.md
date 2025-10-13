@@ -32,6 +32,4 @@ sudo git init --bare /opt/apps.git
 sudo ls -l /opt/apps.git
 # You should see directories like branches, hooks, objects, refs inside /opt/apps.git
 
-# ✅ Git bare repository /opt/apps.git is ready for use.
-
 ```
