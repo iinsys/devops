@@ -21,10 +21,6 @@ d. Once configured correctly, you can test the website using `curl http://stapp0
 
 ## Soluton 
 ```bash
-## Step 1: SSH into Jump Host
-ssh thor@jump_host.stratos.xfusioncorp.com
-# password: mjolnir123
-
 ## Step 2: SSH into App Server 2
 ssh steve@stapp02.stratos.xfusioncorp.com
 # password: Am3ric@
