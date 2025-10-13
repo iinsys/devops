@@ -34,7 +34,5 @@ sudo git clone --mirror /opt/games.git
 ### Step 3: Verify cloned repo files
 sudo ls -l /usr/src/kodekloudrepos
 
-# ✅ Task completed correctly.
-
 
 ```
