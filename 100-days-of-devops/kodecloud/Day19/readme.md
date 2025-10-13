@@ -29,10 +29,6 @@ d. Once configured you should be able to access the website using curl command o
 
 ## Solution 
 ```bash
-## Step 1: SSH into Jump Host
-ssh thor@jump_host.stratos.xfusioncorp.com
-# password: mjolnir123
-
 ## Step 2: Copy website backups to App Server 3
 scp -r /home/thor/news banner@stapp03.stratos.xfusioncorp.com:/tmp/
 scp -r /home/thor/demo banner@stapp03.stratos.xfusioncorp.com:/tmp/
