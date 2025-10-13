@@ -4,13 +4,13 @@
 
 # Day 12 – DevOps Daily Task
 ---------------------------------------
-🎯 Task: Troubleshoot Apache Not Reachable on Port 3001
-🗓️ Date: Day 12
-📍 Location: App Server 1 (stapp01.stratos.xfusioncorp.com)
-👤 User: tony
-🔐 Password: Ir0nM@n
+ Task: Troubleshoot Apache Not Reachable on Port 3001
+ Date: Day 12
+ Location: App Server 1 (stapp01.stratos.xfusioncorp.com)
+ User: tony
+ Password: Ir0nM@n
 
-### 📝 Task Objective:
+### Task Objective:
 - Investigate why Apache is not reachable on port 3001 from the jump host.
 - Use tools like `netstat`, `iptables`, and systemctl to diagnose and fix the issue.
 - Ensure Apache is running, listening on 0.0.0.0:3001, and the firewall allows external access.
