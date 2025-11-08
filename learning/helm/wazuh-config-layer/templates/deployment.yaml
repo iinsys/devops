@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wazuh-config-layer.fullname" . }}
+  labels:
+    {{- include "wazuh-config-layer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "wazuh-config-layer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "wazuh-config-layer.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "wazuh-config-layer.serviceAccountName" . }}
+      initContainers:
+        - name: config-merger
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              mkdir -p /config-target
+              cp "{{ .Values.config.existingFilePath }}" "/config-target/{{ .Values.config.fileName }}"
+              if [ -s "/config-snippets/{{ .Values.config.snippetFileName }}" ]; then
+                printf '\n<!-- Custom overrides appended by Helm -->\n' >> "/config-target/{{ .Values.config.fileName }}"
+                cat "/config-snippets/{{ .Values.config.snippetFileName }}" >> "/config-target/{{ .Values.config.fileName }}"
+              fi
+          volumeMounts:
+            - name: config-target
+              mountPath: /config-target
+            - name: config-snippets
+              mountPath: /config-snippets
+      containers:
+        - name: wazuh-agent
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: config-target
+              mountPath: {{ printf "%s/%s" .Values.config.mountPath .Values.config.fileName }}
+              subPath: {{ .Values.config.fileName }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-target
+          emptyDir: {}
+        - name: config-snippets
+          configMap:
+            name: {{ include "wazuh-config-layer.fullname" . }}
+

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: wazuh-config-layer
+description: Demonstrates layering custom configuration snippets onto the Wazuh agent default configuration without overwriting vendor files.
+type: application
+version: 0.1.0
+appVersion: "4.14.0"
+

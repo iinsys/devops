@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  repository: wazuh/wazuh-agent
+  tag: "4.14.0"
+  pullPolicy: IfNotPresent
+
+command:
+  - /bin/sh
+  - -c
+  - sleep infinity
+
+resources: {}
+
+serviceAccount:
+  create: false
+  name: ""
+
+config:
+  mountPath: /var/ossec/etc
+  existingFilePath: /var/ossec/etc/ossec.conf
+  fileName: ossec.conf
+  snippetFileName: ossec-overrides.conf
+  extra: |
+    <!-- Example override -->
+    <client>
+      <server>
+        <address>wazuh-manager.example.svc</address>
+      </server>
+    </client>
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+

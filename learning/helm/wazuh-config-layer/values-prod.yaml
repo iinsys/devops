@@ -1,0 +1,8 @@
+config:
+  extra: |
+    <client>
+      <server>
+        <address>wazuh-manager.prod.svc</address>
+      </server>
+      <crypto_method>aes</crypto_method>
+    </client>
