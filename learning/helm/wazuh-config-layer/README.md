@@ -52,6 +52,20 @@ kubectl exec deploy/wazuh-layer-wazuh-config-layer -- cat /var/ossec/etc/ossec.c
 
 You should see the vendor defaults followed by the custom snippet appended near the bottom with the comment `<!-- Custom overrides appended by Helm -->`.
 
+Example (truncated) output:
+
+```text
+...
+<!-- Custom overrides appended by Helm -->
+
+<!-- Example override -->
+<client>
+  <server>
+    <address>wazuh-manager.example.svc</address>
+  </server>
+</client>
+```
+
 ## Updating Overrides
 
 Keep override snippets in versioned manifests so you can roll back or promote them between environments. For example, `values-prod.yaml` might contain:
@@ -91,6 +105,22 @@ kubectl exec deploy/wazuh-layer-wazuh-config-layer -- cat /var/ossec/etc/ossec.c
 - **Volume mount with `subPath`**: The main container mounts only the merged file (not the entire directory) back to `/var/ossec/etc/ossec.conf`, so the rest of the vendor configuration stays untouched.
 
 This combination lets us append configuration safely without relying on Secrets or replacing the upstream file.
+
+### Handling Permission Constraints
+
+Because the chart copies the vendor file into an `emptyDir`, it only needs read access to the original path. If the init container lacks permission to read from `config.existingFilePath`, configure the security context values exposed in `values.yaml`. For example, to run the init container as root and grant the main container read access:
+
+```yaml
+initContainerSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+
+containerSecurityContext:
+  runAsUser: 1000
+  fsGroup: 1000
+```
+
+Apply the manifest with `helm upgrade --install ... -f <your-values>.yaml`, then restart the deployment to rebuild the merged file as shown above.
 
 ## Cleanup
 

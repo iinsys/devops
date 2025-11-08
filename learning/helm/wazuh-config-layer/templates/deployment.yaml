@@ -15,6 +15,10 @@ spec:
         {{- include "wazuh-config-layer.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "wazuh-config-layer.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       initContainers:
         - name: config-merger
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -30,6 +34,10 @@ spec:
                 printf '\n<!-- Custom overrides appended by Helm -->\n' >> "/config-target/{{ .Values.config.fileName }}"
                 cat "/config-snippets/{{ .Values.config.snippetFileName }}" >> "/config-target/{{ .Values.config.fileName }}"
               fi
+          {{- with .Values.initContainerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: config-target
               mountPath: /config-target
@@ -42,6 +50,10 @@ spec:
           {{- if .Values.command }}
           command:
             {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: config-target

@@ -16,6 +16,12 @@ serviceAccount:
   create: false
   name: ""
 
+podSecurityContext: {}
+
+initContainerSecurityContext: {}
+
+containerSecurityContext: {}
+
 config:
   mountPath: /var/ossec/etc
   existingFilePath: /var/ossec/etc/ossec.conf
