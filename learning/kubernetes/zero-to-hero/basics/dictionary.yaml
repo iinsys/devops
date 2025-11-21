@@ -1,0 +1,14 @@
+# YAML Dictionary
+icecream:
+  brand: "Ben & Jerry's"
+  toppings:
+    - chocolate
+    - caramel
+    - nuts
+  color: "brown"
+  quantity: 2
+  order_date: "2025-11-12"
+  order_id: "1234567890"
+  order_status: "pending"
+  order_total: 10.00
+  order_items:

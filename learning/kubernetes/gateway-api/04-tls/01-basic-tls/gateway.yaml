@@ -1,0 +1,30 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: tls-gateway
+  namespace: default
+spec:
+  gatewayClassName: example-gatewayclass
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: example.com
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: example-tls-cert
+        kind: Secret
+    allowedRoutes:
+      namespaces:
+        from: All
+---
+# TLS Configuration:
+# - protocol: HTTPS (for TLS termination)
+# - hostname: SNI hostname to match
+# - tls:
+#     mode: Terminate (terminate TLS) or Passthrough (pass through to backend)
+#     certificateRefs: List of certificate references
+#       - name: Secret name containing certificate
+#       - kind: Secret (default)
+

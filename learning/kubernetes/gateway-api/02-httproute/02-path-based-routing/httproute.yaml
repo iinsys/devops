@@ -1,0 +1,40 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: path-based-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: example-gateway
+    namespace: default
+  rules:
+  # Route /api/* to API service
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api
+    backendRefs:
+    - name: api-service
+      port: 80
+  # Route /web/* to web frontend
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /web
+    backendRefs:
+    - name: web-service
+      port: 80
+  # Default route to default service
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: default-service
+      port: 80
+---
+# Path Matching Types:
+# - PathPrefix: Matches if the request path starts with the value
+# - Exact: Matches if the request path exactly equals the value
+# - RegularExpression: Matches based on a regex pattern (advanced)
+

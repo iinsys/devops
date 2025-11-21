@@ -1,0 +1,40 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: method-based-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: example-gateway
+    namespace: default
+  rules:
+  # Route POST requests to write service
+  - matches:
+    - method: POST
+      path:
+        type: PathPrefix
+        value: /api
+    backendRefs:
+    - name: write-service
+      port: 80
+  # Route GET requests to read service
+  - matches:
+    - method: GET
+      path:
+        type: PathPrefix
+        value: /api
+    backendRefs:
+    - name: read-service
+      port: 80
+  # Default route
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: default-service
+      port: 80
+---
+# HTTP Methods supported:
+# GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH
+

@@ -1,0 +1,32 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: traffic-split-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: example-gateway
+    namespace: default
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    # 80% of traffic goes to v1
+    - name: app-v1
+      port: 80
+      weight: 80
+    # 20% of traffic goes to v2
+    - name: app-v2
+      port: 80
+      weight: 20
+---
+# Traffic Splitting:
+# - backendRefs: List of backend services (note: plural, not backendRef)
+# - weight: Relative weight for traffic distribution
+#   - Weight 80 means 80% of traffic
+#   - Weight 20 means 20% of traffic
+#   - Total: 100% (80 + 20)
+# - Weights are relative, so 4:1 is the same as 80:20
+

@@ -1,0 +1,15 @@
+- icecream
+- brand
+- toppings
+- color
+- quantity
+- order_date
+- order_id
+- order_status
+- order_total
+- order_items
+- order_item_price
+- order_item_quantity
+- order_item_total
+- order_item_status
+- order_item_total

@@ -1,0 +1,24 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: example-gateway
+  namespace: default
+spec:
+  gatewayClassName: example-gatewayclass
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: All
+---
+# Gateway Configuration Explained:
+# - gatewayClassName: References the GatewayClass to use
+# - listeners: Defines what ports and protocols to listen on
+#   - name: Unique name for the listener
+#   - protocol: HTTP, HTTPS, or TCP
+#   - port: Port number to listen on
+#   - allowedRoutes: Controls which HTTPRoutes can attach
+#     - from: All, Same, or Selector
+

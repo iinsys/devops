@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: example-gatewayclass
+spec:
+  controllerName: example.com/gateway-controller
+  description: "Example GatewayClass for learning Gateway API"
+---
+# Note: The actual controllerName depends on your Gateway implementation
+# Common examples:
+# - istio.io/gateway-controller (for Istio)
+# - konghq.com/kong (for Kong)
+# - traefik.io/gateway-controller (for Traefik)
+# - projectcontour.io/contour (for Contour)
+

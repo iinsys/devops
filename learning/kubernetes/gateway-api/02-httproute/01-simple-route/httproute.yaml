@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: simple-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: example-gateway
+    namespace: default
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: webapp
+      port: 80
+---
+# HTTPRoute Configuration Explained:
+# - parentRefs: List of Gateways this route attaches to
+#   - name: Name of the Gateway
+#   - namespace: Namespace of the Gateway
+# - rules: List of routing rules
+#   - matches: Conditions that must be met
+#     - path: Path matching rule
+#       - type: PathPrefix (starts with) or Exact (exact match)
+#       - value: The path to match
+#   - backendRefs: Where to send matched traffic
+#     - name: Service name
+#     - port: Service port
+

@@ -1,0 +1,40 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: header-based-route
+  namespace: default
+spec:
+  parentRefs:
+  - name: example-gateway
+    namespace: default
+  rules:
+  # Route requests with header "X-Version: v2" to v2 service
+  - matches:
+    - headers:
+      - name: X-Version
+        value: v2
+    backendRefs:
+    - name: app-v2
+      port: 80
+  # Route requests with header "X-Version: v1" to v1 service
+  - matches:
+    - headers:
+      - name: X-Version
+        value: v1
+    backendRefs:
+    - name: app-v1
+      port: 80
+  # Default route
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: app-v1
+      port: 80
+---
+# Header Matching:
+# - name: Header name (case-insensitive)
+# - value: Exact value to match
+# - type: Exact (default) or RegularExpression
+
