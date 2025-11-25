@@ -47,7 +47,7 @@ Click Create key pair, then fill in the details:
 Click Create key pair. A file named `datacenter-kp.pem` will download automatically.
 
 ## Validation (KodeCloud Lab)
-
+<Details>
 To confirm the task:
 
 1. Return to the KodeCloud lab interface.
@@ -75,3 +75,6 @@ If successful, the key pair details will be displayed.
 ## Completion
 
 Day 1 completed.
+</Details>
+  
+### Or if you prefer a video use [Link](https://www.youtube.com/shorts/CaAnXUBcBcY)
