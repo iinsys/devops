@@ -54,6 +54,7 @@ Example valid CIDR blocks for default VPC (`172.31.0.0/16`):
 - `172.31.64.0/20`
 
 The console typically suggests an available range — using that suggestion is fine.
+
 `Note:` Select the CIDR block range that won't overlap if you get a warning
 
 ### Step 4 — Save
